@@ -18,3 +18,4 @@ hello World! master test
 hello World! hot-fix test
 This is remote update version!
 by lmk on github
+next local update
