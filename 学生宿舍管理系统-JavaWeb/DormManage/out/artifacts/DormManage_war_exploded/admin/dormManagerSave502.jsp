@@ -26,7 +26,7 @@
 <div class="data_list">
     <div class="data_list_title">
         <c:choose>
-            <c:when test="${dormManager502.dormManagerId!=null }">
+            <c:when test="${dormManager.dormManagerId!=null }">
                 修改管理员
             </c:when>
             <c:otherwise>
@@ -36,26 +36,26 @@
     </div>
     <form action="dormManager?action=save" method="post" onsubmit="return checkForm()">
         <div class="data_form">
-            <input type="hidden" id="dormManagerId" name="dormManagerId" value="${dormManager502.dormManagerId }"/>
+            <input type="hidden" id="dormManagerId" name="dormManagerId" value="${dormManager.dormManagerId }"/>
             <table align="center">
                 <tr>
                     <td><font color="red">*</font>用户名：</td>
-                    <td><input type="text" id="userName" name="userName" value="${dormManager502.userName }"
+                    <td><input type="text" id="userName" name="userName" value="${dormManager.userName }"
                                style="margin-top:5px;height:30px;"/></td>
                 </tr>
                 <tr>
                     <td><font color="red">*</font>密码：</td>
-                    <td><input type="password" id="password" name="password" value="${dormManager502.password }"
+                    <td><input type="password" id="password" name="password" value="${dormManager.password }"
                                style="margin-top:5px;height:30px;"/></td>
                 </tr>
                 <tr>
                     <td><font color="red">*</font>重复密码：</td>
-                    <td><input type="password" id="rPassword" name="rPassword" value="${dormManager502.password }"
+                    <td><input type="password" id="rPassword" name="rPassword" value="${dormManager.password }"
                                style="margin-top:5px;height:30px;"/></td>
                 </tr>
                 <tr>
                     <td><font color="red">*</font>姓名：</td>
-                    <td><input type="text" id="name" name="name" value="${dormManager502.name }"
+                    <td><input type="text" id="name" name="name" value="${dormManager.name }"
                                style="margin-top:5px;height:30px;"/></td>
                 </tr>
                 <tr>
@@ -63,14 +63,14 @@
                     <td>
                         <select id="sex" name="sex" style="width: 90px;">
                             <option value="">请选择...</option>
-                            <option value="男" ${dormManager502.sex eq "男"?'selected':'' }>男</option>
-                            <option value="女" ${dormManager502.sex eq "女"?'selected':'' }>女</option>
+                            <option value="男" ${dormManager.sex eq "男"?'selected':'' }>男</option>
+                            <option value="女" ${dormManager.sex eq "女"?'selected':'' }>女</option>
                         </select>
                     </td>
                 </tr>
                 <tr>
                     <td><font color="red">*</font>联系电话：</td>
-                    <td><input type="text" id="tel" name="tel" value="${dormManager502.tel }"
+                    <td><input type="text" id="tel" name="tel" value="${dormManager.tel }"
                                style="margin-top:5px;height:30px;"/></td>
                 </tr>
             </table>

@@ -22,7 +22,7 @@
     </div>
     <form action="count?action=save" method="post" onsubmit="return checkForm()">
         <div class="data_form">
-            <input type="hidden" name="dormBuildId" value="${count509.dormBuildId}">
+            <input type="hidden" name="dormBuildId" value="${count.dormBuildId}">
             <table align="center">
                 <tr>
                     <td><font color="red"></font>学号：</td>
@@ -38,7 +38,7 @@
                 <tr>
                     <td>地点</td>
                     <td>
-                        <input type="text" readonly value="${count509.dormBuildName}" name="dormBuildName">
+                        <input type="text" readonly value="${count.dormBuildName}" name="dormBuildName">
                     </td>
                 </tr>
                 <tr>
@@ -52,7 +52,7 @@
                 </tr>
                 <tr>
                     <td><font color="red">*</font>时间：</td>
-                    <td><input type="text" id="date" name="date" value="${count509.date }"
+                    <td><input type="text" id="date" name="date" value="${count.date }"
                                style="margin-top:5px;height:30px;" readonly="readonly"/></td>
                 </tr>
                 <tr>
@@ -63,7 +63,7 @@
             </table>
             <div align="center">
                 <input type="submit" class="btn btn-primary" value="保存"/>
-                &nbsp;<button class="btn btn-primary" type="button" onclick="javascript:window.location='count509'">返回
+                &nbsp;<button class="btn btn-primary" type="button" onclick="javascript:window.location='count'">返回
             </button>
             </div>
             <div align="center">

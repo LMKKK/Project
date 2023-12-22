@@ -82,14 +82,14 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" var="count509" items="${countList }">
+            <c:forEach varStatus="i" var="count" items="${countList }">
                 <tr>
-                    <td>${count509.date }</td>
-                    <td>${count509.stuNum }</td>
-                    <td>${count509.stuName }</td>
-                    <td>${count509.dormBuildName==null?"无":count509.dormBuildName }</td>
-                    <td>${count509.state }</td>
-                    <td>${count509.detail }</td>
+                    <td>${count.date }</td>
+                    <td>${count.stuNum }</td>
+                    <td>${count.stuName }</td>
+                    <td>${count.dormBuildName==null?"无":count.dormBuildName }</td>
+                    <td>${count.state }</td>
+                    <td>${count.detail }</td>
                 </tr>
             </c:forEach>
             </tbody>

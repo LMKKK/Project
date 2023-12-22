@@ -22,7 +22,10 @@ public class MD5Util {
         return new BigInteger(1, md5.digest(str.getBytes(StandardCharsets.UTF_8))).toString(16);
     }
 
-    public static void main(String[] args) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+    /**
+     * 测试一下
+     */
+    public static void main(String[] args) {
         System.out.println(MD5Util.encoderPwdByMD5("111"));
     }
 }

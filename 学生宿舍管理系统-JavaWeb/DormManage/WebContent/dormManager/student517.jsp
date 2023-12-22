@@ -34,7 +34,7 @@
     <div class="data_list_title">
         学生管理
     </div>
-    <form name="myForm" class="form-search" method="post" action="student517?action=search" style="padding-bottom: 0px">
+    <form name="myForm" class="form-search" method="post" action="student?action=search" style="padding-bottom: 0px">
 				<span class="data_search">
 					<span><font style="font-family: '黑体'; font-style: 'bold'; font-size: 20px"
                                 color="blue">${dormBuildName }&nbsp;&nbsp;</font></span>
@@ -63,18 +63,18 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" var="student517" items="${student517List }">
+            <c:forEach varStatus="i" var="student" items="${studentList }">
                 <tr>
                     <td>${i.count}</td>
-                    <td>${student517.userName }</td>
-                    <td>${student517.name }</td>
-                    <td>${student517.sex }</td>
-                    <td>${student517.dormBuildName==null?"无":student517.dormBuildName }</td>
-                    <td>${student517.dormName }</td>
-                    <td>${student517.tel }</td>
+                    <td>${student.userName }</td>
+                    <td>${student.name }</td>
+                    <td>${student.sex }</td>
+                    <td>${student.dormBuildName==null?"无":student.dormBuildName }</td>
+                    <td>${student.dormName }</td>
+                    <td>${student.tel }</td>
                     <td>
                         <button class="btn btn-mini btn-success" type="button"
-                                onclick="javascript:window.location='record?action=preSave&studentNumber=${student517.userName }'">
+                                onclick="javascript:window.location='record?action=preSave&studentNumber=${student.userName }'">
                             添加缺勤记录
                         </button>
                     </td>

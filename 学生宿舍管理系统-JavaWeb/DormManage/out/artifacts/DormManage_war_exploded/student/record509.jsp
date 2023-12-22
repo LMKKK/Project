@@ -71,14 +71,14 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" var="record509" items="${recordList }">
+            <c:forEach varStatus="i" var="record" items="${recordList }">
                 <tr>
-                    <td>${record509.date }</td>
-                    <td>${record509.studentNumber }</td>
-                    <td>${record509.studentName }</td>
-                    <td>${record509.dormBuildName==null?"无":record509.dormBuildName }</td>
-                    <td>${record509.dormName }</td>
-                    <td>${record509.detail }</td>
+                    <td>${record.date }</td>
+                    <td>${record.studentNumber }</td>
+                    <td>${record.studentName }</td>
+                    <td>${record.dormBuildName==null?"无":record.dormBuildName }</td>
+                    <td>${record.dormName }</td>
+                    <td>${record.detail }</td>
                 </tr>
             </c:forEach>
             </tbody>

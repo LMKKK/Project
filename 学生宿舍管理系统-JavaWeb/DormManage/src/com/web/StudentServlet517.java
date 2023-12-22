@@ -11,10 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.dao.DormBuildDao502;
-import com.dao.StudentDao517;
-import com.model.DormManager502;
-import com.model.Student517;
+import com.dao.DormBuildDao;
+import com.dao.StudentDao;
+import com.model.DormManager;
+import com.model.Student;
 import com.util.DBUtils;
 import com.util.StringUtil;
 
@@ -27,7 +27,7 @@ public class StudentServlet517 extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DBUtils dbUtil = new DBUtils();
-    StudentDao517 studentDao517 = new StudentDao517();
+    StudentDao studentDao = new StudentDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -45,7 +45,7 @@ public class StudentServlet517 extends HttpServlet {
         String dormBuildId = request.getParameter("buildToSelect");
         String searchType = request.getParameter("searchType");
         String action = request.getParameter("action");
-        Student517 student517 = new Student517();
+        Student student = new Student();
         if ("preSave".equals(action)) {
             studentPreSave(request, response);
             return;
@@ -58,15 +58,15 @@ public class StudentServlet517 extends HttpServlet {
         } else if ("list".equals(action)) {
             if (StringUtil.isNotEmpty(s_studentText)) {
                 if ("name".equals(searchType)) {
-                    student517.setName(s_studentText);
+                    student.setName(s_studentText);
                 } else if ("number".equals(searchType)) {
-                    student517.setStuNumber(s_studentText);
+                    student.setStuNumber(s_studentText);
                 } else if ("dorm".equals(searchType)) {
-                    student517.setDormName(s_studentText);
+                    student.setDormName(s_studentText);
                 }
             }
             if (StringUtil.isNotEmpty(dormBuildId)) {
-                student517.setDormBuildId(Integer.parseInt(dormBuildId));
+                student.setDormBuildId(Integer.parseInt(dormBuildId));
             }
             session.removeAttribute("s_studentText");
             session.removeAttribute("searchType");
@@ -77,11 +77,11 @@ public class StudentServlet517 extends HttpServlet {
         } else if ("search".equals(action)) {
             if (StringUtil.isNotEmpty(s_studentText)) {
                 if ("name".equals(searchType)) {
-                    student517.setName(s_studentText);
+                    student.setName(s_studentText);
                 } else if ("number".equals(searchType)) {
-                    student517.setStuNumber(s_studentText);
+                    student.setStuNumber(s_studentText);
                 } else if ("dorm".equals(searchType)) {
-                    student517.setDormName(s_studentText);
+                    student.setDormName(s_studentText);
                 }
                 session.setAttribute("s_studentText", s_studentText);
                 session.setAttribute("searchType", searchType);
@@ -90,7 +90,7 @@ public class StudentServlet517 extends HttpServlet {
                 session.removeAttribute("searchType");
             }
             if (StringUtil.isNotEmpty(dormBuildId)) {
-                student517.setDormBuildId(Integer.parseInt(dormBuildId));
+                student.setDormBuildId(Integer.parseInt(dormBuildId));
                 session.setAttribute("buildToSelect", dormBuildId);
             } else {
                 session.removeAttribute("buildToSelect");
@@ -99,17 +99,17 @@ public class StudentServlet517 extends HttpServlet {
             if ("admin".equals((String) currentUserType)) {
                 if (StringUtil.isNotEmpty(s_studentText)) {
                     if ("name".equals(searchType)) {
-                        student517.setName(s_studentText);
+                        student.setName(s_studentText);
                     } else if ("number".equals(searchType)) {
-                        student517.setStuNumber(s_studentText);
+                        student.setStuNumber(s_studentText);
                     } else if ("dorm".equals(searchType)) {
-                        student517.setDormName(s_studentText);
+                        student.setDormName(s_studentText);
                     }
                     session.setAttribute("s_studentText", s_studentText);
                     session.setAttribute("searchType", searchType);
                 }
                 if (StringUtil.isNotEmpty(dormBuildId)) {
-                    student517.setDormBuildId(Integer.parseInt(dormBuildId));
+                    student.setDormBuildId(Integer.parseInt(dormBuildId));
                     session.setAttribute("buildToSelect", dormBuildId);
                 }
                 if (StringUtil.isEmpty(s_studentText) && StringUtil.isEmpty(dormBuildId)) {
@@ -118,25 +118,25 @@ public class StudentServlet517 extends HttpServlet {
                     Object o3 = session.getAttribute("buildToSelect");
                     if (o1 != null) {
                         if ("name".equals((String) o2)) {
-                            student517.setName((String) o1);
+                            student.setName((String) o1);
                         } else if ("number".equals((String) o2)) {
-                            student517.setStuNumber((String) o1);
+                            student.setStuNumber((String) o1);
                         } else if ("dorm".equals((String) o2)) {
-                            student517.setDormName((String) o1);
+                            student.setDormName((String) o1);
                         }
                     }
                     if (o3 != null) {
-                        student517.setDormBuildId(Integer.parseInt((String) o3));
+                        student.setDormBuildId(Integer.parseInt((String) o3));
                     }
                 }
             } else if ("dormManager".equals((String) currentUserType)) {
                 if (StringUtil.isNotEmpty(s_studentText)) {
                     if ("name".equals(searchType)) {
-                        student517.setName(s_studentText);
+                        student.setName(s_studentText);
                     } else if ("number".equals(searchType)) {
-                        student517.setStuNumber(s_studentText);
+                        student.setStuNumber(s_studentText);
                     } else if ("dorm".equals(searchType)) {
-                        student517.setDormName(s_studentText);
+                        student.setDormName(s_studentText);
                     }
                     session.setAttribute("s_studentText", s_studentText);
                     session.setAttribute("searchType", searchType);
@@ -146,11 +146,11 @@ public class StudentServlet517 extends HttpServlet {
                     Object o2 = session.getAttribute("searchType");
                     if (o1 != null) {
                         if ("name".equals((String) o2)) {
-                            student517.setName((String) o1);
+                            student.setName((String) o1);
                         } else if ("number".equals((String) o2)) {
-                            student517.setStuNumber((String) o1);
+                            student.setStuNumber((String) o1);
                         } else if ("dorm".equals((String) o2)) {
-                            student517.setDormName((String) o1);
+                            student.setDormName((String) o1);
                         }
                     }
                 }
@@ -160,18 +160,18 @@ public class StudentServlet517 extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if ("admin".equals((String) currentUserType)) {
-                List<Student517> student517List = studentDao517.studentList(con, student517);
-                request.setAttribute("dormBuildList", studentDao517.dormBuildList(con));
-                request.setAttribute("student517List", student517List);
+                List<Student> studentList = studentDao.studentList(con, student);
+                request.setAttribute("dormBuildList", studentDao.dormBuildList(con));
+                request.setAttribute("student517List", studentList);
                 request.setAttribute("mainPage", "admin/student517.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
-                DormManager502 manager = (DormManager502) (session.getAttribute("currentUser"));
+                DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
-                String buildName = DormBuildDao502.dormBuildName(con, buildId);
-                List<Student517> student517List = studentDao517.studentListWithBuild(con, student517, buildId);
+                String buildName = DormBuildDao.dormBuildName(con, buildId);
+                List<Student> studentList = studentDao.studentListWithBuild(con, student, buildId);
                 request.setAttribute("dormBuildName", buildName);
-                request.setAttribute("student517List", student517List);
+                request.setAttribute("student517List", studentList);
                 request.setAttribute("mainPage", "dormManager/student517.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             }
@@ -192,7 +192,7 @@ public class StudentServlet517 extends HttpServlet {
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            studentDao517.studentDelete(con, studentId);
+            studentDao.studentDelete(con, studentId);
             request.getRequestDispatcher("student?action=list").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -215,18 +215,18 @@ public class StudentServlet517 extends HttpServlet {
         String name = request.getParameter("name");
         String sex = request.getParameter("sex");
         String tel = request.getParameter("tel");
-        Student517 student517 = new Student517(userName, password, Integer.parseInt(dormBuildId), dormName, name, sex, tel);
+        Student student = new Student(userName, password, Integer.parseInt(dormBuildId), dormName, name, sex, tel);
         if (StringUtil.isNotEmpty(studentId)) {
-            student517.setStudentId(Integer.parseInt(studentId));
+            student.setStudentId(Integer.parseInt(studentId));
         }
         Connection con = null;
         try {
             con = dbUtil.getCon();
             int saveNum = 0;
             if (StringUtil.isNotEmpty(studentId)) {
-                saveNum = studentDao517.studentUpdate(con, student517);
-            } else if (studentDao517.haveNameByNumber(con, student517.getStuNumber())) {
-                request.setAttribute("student", student517);
+                saveNum = studentDao.studentUpdate(con, student);
+            } else if (studentDao.haveNameByNumber(con, student.getStuNumber())) {
+                request.setAttribute("student", student);
                 request.setAttribute("error", "该学号已存在");
                 request.setAttribute("mainPage", "admin/studentSave.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
@@ -237,12 +237,12 @@ public class StudentServlet517 extends HttpServlet {
                 }
                 return;
             } else {
-                saveNum = studentDao517.studentAdd(con, student517);
+                saveNum = studentDao.studentAdd(con, student);
             }
             if (saveNum > 0) {
                 request.getRequestDispatcher("student?action=list").forward(request, response);
             } else {
-                request.setAttribute("student", student517);
+                request.setAttribute("student", student);
                 request.setAttribute("error", "保存失败");
                 request.setAttribute("mainPage", "admin/studentSave502.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
@@ -264,10 +264,10 @@ public class StudentServlet517 extends HttpServlet {
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            request.setAttribute("dormBuildList", studentDao517.dormBuildList(con));
+            request.setAttribute("dormBuildList", studentDao.dormBuildList(con));
             if (StringUtil.isNotEmpty(studentId)) {
-                Student517 student517 = studentDao517.studentShow(con, studentId);
-                request.setAttribute("student517", student517);
+                Student student = studentDao.getStudentById(con, studentId);
+                request.setAttribute("student517", student);
             }
         } catch (Exception e) {
             e.printStackTrace();

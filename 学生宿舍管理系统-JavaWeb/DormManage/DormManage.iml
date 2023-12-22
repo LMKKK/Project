@@ -22,8 +22,9 @@
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="c3p0-0.9.5.5" level="project" />
     <orderEntry type="library" name="mchange-commons-java-0.2.19" level="project" />
-    <orderEntry type="library" name="lib1" level="project" />
     <orderEntry type="library" name="commons-io-2.11.0" level="project" />
     <orderEntry type="library" name="commons-fileupload-1.4" level="project" />
+    <orderEntry type="library" name="javax.servlet-api-4.0.1" level="project" />
+    <orderEntry type="library" name="jsp-api-2.2" level="project" />
   </component>
 </module>

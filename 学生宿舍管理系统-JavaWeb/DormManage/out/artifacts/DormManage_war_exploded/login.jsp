@@ -1,9 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
-<%@ page import="com.model.Admin509" %>
-<%@ page import="com.model.DormManager502" %>
-<%@ page import="com.model.Student517" %>
-<%@ page import="com.model.Admin509" %>
+<%@ page import="com.model.Admin" %>
+<%@ page import="com.model.DormManager" %>
+<%@ page import="com.model.Student" %>
+<%@ page import="com.model.Admin" %>
 
 <html lang="zh">
 <head>
@@ -133,13 +133,13 @@
         if (userType == null) {
             userType = "";
         } else if ("admin".equals(userType)) {
-            pageContext.setAttribute("user", new Admin509(userName, password));
+            pageContext.setAttribute("user", new Admin(userName, password));
             pageContext.setAttribute("userType", 1);
         } else if ("dormManager".equals(userType)) {
-            pageContext.setAttribute("user", new DormManager502(userName, password));
+            pageContext.setAttribute("user", new DormManager(userName, password));
             pageContext.setAttribute("userType", 2);
         } else if ("student".equals(userType)) {
-            pageContext.setAttribute("user", new Student517(userName, password));
+            pageContext.setAttribute("user", new Student(userName, password));
             pageContext.setAttribute("userType", 3);
         }
 
@@ -157,17 +157,17 @@
         <input id="password" name="password" value="${user.password }" type="password" class="input-block-level"
                placeholder="密码...">
         <label class="radio inline">
-            <input id="admin" type="radio" name="userType" value="admin" checked/> 系统管理员
+            <input id="admin" type="radio" name="userType" value="1" checked/> 系统管理员
         </label>
         <label class="radio inline">
             <input id="dormManager" type="radio" name="userType"
-                   value="dormManager" ${userType==2?'checked':''} />宿舍管理员
+                   value="2" ${userType==2?'checked':''} />宿舍管理员
         </label>
         <label class="radio inline">
-            <input id="student" type="radio" name="userType" value="student"  ${userType==3?'checked':''}/> 学生
+            <input id="student" type="radio" name="userType" value="3"  ${userType==3?'checked':''}/> 学生
         </label>
         <label class="checkbox">
-            <input id="remember" name="remember" type="checkbox" value="remember-me" ${remember==1?'checked':''}>记住我
+            <input id="remember" name="remember" type="checkbox" value="1" ${remember==1?'checked':''}>记住我
             &nbsp;&nbsp;&nbsp;&nbsp; <font id="error" color="red">${error }</font>
         </label>
         <div class="btn-container">

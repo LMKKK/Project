@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/src/com/dao/CountDao509.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/com/dao/ExceptionDao517.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/dao/CountDao.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/dao/ExceptionDao.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/model/PageBean.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/CountServlet509.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/DormBuildServlet502.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/DormManagerServlet502.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/ExceptionServlet517.java" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/src/com/web/LoginServlet509.java" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/src/com/web/LoginServlet.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/PasswordServlet509.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/RecordServlet509.java" charset="GBK" />
     <file url="file://$PROJECT_DIR$/src/com/web/StudentServlet517.java" charset="GBK" />

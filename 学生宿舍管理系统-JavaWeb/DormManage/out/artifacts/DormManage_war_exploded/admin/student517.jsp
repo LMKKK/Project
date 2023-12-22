@@ -46,8 +46,8 @@
         <span class="data_search">
 					<select id="buildToSelect" name="buildToSelect" style="width: 110px;">
 					<option value="">全部宿舍楼</option>
-					<c:forEach var="dormBuild502" items="${dormBuildList }">
-                        <option value="${dormBuild502.dormBuildId }" ${buildToSelect==dormBuild502.dormBuildId?'selected':'' }>${dormBuild502.dormBuildName }</option>
+					<c:forEach var="dormBuild" items="${dormBuildList }">
+                        <option value="${dormBuild.dormBuildId }" ${buildToSelect==dormBuild.dormBuildId?'selected':'' }>${dormBuild.dormBuildName }</option>
                     </c:forEach>
 					</select>
 					<select id="searchType" name="searchType" style="width: 80px;">
@@ -75,22 +75,22 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" begin="" var="student517" items="${student517List }">
+            <c:forEach varStatus="i" begin="" var="student" items="${studentList }">
                 <tr>
                     <td>${i.count}</td>
-                    <td>${student517.userName }</td>
-                    <td>${student517.name }</td>
-                    <td>${student517.sex }</td>
-                    <td>${student517.dormBuildName==null?"无":student517.dormBuildName }</td>
-                    <td>${student517.dormName }</td>
-                    <td>${student517.tel }</td>
+                    <td>${student.userName }</td>
+                    <td>${student.name }</td>
+                    <td>${student.sex }</td>
+                    <td>${student.dormBuildName==null?"无":student.dormBuildName }</td>
+                    <td>${student.dormName }</td>
+                    <td>${student.tel }</td>
                     <td>
                         <button class="btn btn-mini btn-info" type="button"
-                                onclick="javascript:window.location='student?action=preSave&studentId=${student517.studentId }'">
+                                onclick="javascript:window.location='student?action=preSave&studentId=${student.studentId }'">
                             修改
                         </button>&nbsp;
                         <button class="btn btn-mini btn-danger" type="button"
-                                onclick="studentDelete(${student517.studentId })">删除
+                                onclick="studentDelete(${student.studentId })">删除
                         </button>
                     </td>
                 </tr>

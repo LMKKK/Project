@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.dao.UserDao509;
-import com.model.Admin509;
-import com.model.DormManager502;
-import com.model.Student517;
+import com.dao.UserDao;
+import com.model.Admin;
+import com.model.DormManager;
+import com.model.Student;
 import com.util.DBUtils;
 import com.util.MD5Util;
 
@@ -26,7 +26,7 @@ public class PasswordServlet509 extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DBUtils dbUtil = new DBUtils();
-    UserDao509 userDao509 = new UserDao509();
+    UserDao userDao = new UserDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,10 +58,10 @@ public class PasswordServlet509 extends HttpServlet {
             con = dbUtil.getCon();
 
             if ("admin".equals((String) currentUserType)) {
-                Admin509 admin509 = (Admin509) (session.getAttribute("currentUser"));
-                if (oldPassword.equals(admin509.getPassword())) {
-                    userDao509.adminUpdate(con, admin509.getAdminId(), newPassword);
-                    admin509.setPassword(newPassword);
+                Admin admin = (Admin) (session.getAttribute("currentUser"));
+                if (oldPassword.equals(admin.getPassword())) {
+                    userDao.adminUpdate(con, admin.getAdminId(), newPassword);
+                    admin.setPassword(newPassword);
                     request.setAttribute("oldPassword", oldPassword);
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
@@ -77,9 +77,9 @@ public class PasswordServlet509 extends HttpServlet {
                     request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
                 }
             } else if ("dormManager".equals((String) currentUserType)) {
-                DormManager502 manager = (DormManager502) (session.getAttribute("currentUser"));
+                DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 if (oldPassword.equals(manager.getPassword())) {
-                    userDao509.managerUpdate(con, manager.getDormManagerId(), newPassword);
+                    userDao.managerUpdate(con, manager.getDormManagerId(), newPassword);
                     manager.setPassword(newPassword);
                     request.setAttribute("oldPassword", oldPassword);
                     request.setAttribute("newPassword", newPassword);
@@ -96,10 +96,10 @@ public class PasswordServlet509 extends HttpServlet {
                     request.getRequestDispatcher("mainManager.jsp").forward(request, response);
                 }
             } else if ("student".equals((String) currentUserType)) {
-                Student517 student517 = (Student517) (session.getAttribute("currentUser"));
-                if (oldPassword.equals(student517.getPassword())) {
-                    userDao509.studentUpdate(con, student517.getStudentId(), newPassword);
-                    student517.setPassword(newPassword);
+                Student student = (Student) (session.getAttribute("currentUser"));
+                if (oldPassword.equals(student.getPassword())) {
+                    userDao.studentUpdate(con, student.getStudentId(), newPassword);
+                    student.setPassword(newPassword);
                     request.setAttribute("oldPassword", oldPassword);
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);

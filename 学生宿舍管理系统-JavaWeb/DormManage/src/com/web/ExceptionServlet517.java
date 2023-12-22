@@ -1,10 +1,10 @@
 package com.web;
 
-import com.dao.DormBuildDao502;
-import com.dao.ExceptionDao517;
-import com.model.DormManager502;
-import com.model.Excp517;
-import com.model.Student517;
+import com.dao.DormBuildDao;
+import com.dao.ExceptionDao;
+import com.model.DormManager;
+import com.model.Excp;
+import com.model.Student;
 import com.util.DBUtils;
 import com.util.DateUtil;
 import com.util.StringUtil;
@@ -31,7 +31,7 @@ public class ExceptionServlet517 extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DBUtils dbUtil = new DBUtils();
-    ExceptionDao517 recordDao = new ExceptionDao517();
+    ExceptionDao recordDao = new ExceptionDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -50,16 +50,16 @@ public class ExceptionServlet517 extends HttpServlet {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
 
-        Excp517 record = new Excp517();
+        Excp record = new Excp();
         if ("preSave".equals(action)) {
             recordPreSave(request, response);
             return;
         } else if ("save".equals(action)) {
             upload(request, response);
-            Student517 student517 = (Student517) (session.getAttribute("currentUser"));
-            List<Excp517> recordList = null;
+            Student student = (Student) (session.getAttribute("currentUser"));
+            List<Excp> recordList = null;
             try {
-                recordList = recordDao.recordListWithNumber(dbUtil.getCon(), record, student517.getStuNumber());
+                recordList = recordDao.recordListWithNumber(dbUtil.getCon(), record, student.getStuNumber());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -77,9 +77,9 @@ public class ExceptionServlet517 extends HttpServlet {
             try {
                 con = dbUtil.getCon();
                 if (StringUtil.isNotEmpty(excpId)) {
-                    Excp517 excp517 = recordDao.recordShow(con, excpId);
-                    System.out.println(excp517);
-                    request.setAttribute("exception", excp517);
+                    Excp excp = recordDao.recordShow(con, excpId);
+                    System.out.println(excp);
+                    request.setAttribute("exception", excp);
                 } else {
                     Calendar rightNow = Calendar.getInstance();
                     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
@@ -99,7 +99,7 @@ public class ExceptionServlet517 extends HttpServlet {
                 request.setAttribute("mainPage", "dormManager/excpSave517.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
-                Student517 student517 = (Student517) (session.getAttribute("currentUser"));
+                Student student = (Student) (session.getAttribute("currentUser"));
                 request.setAttribute("mainPage", "student/exceptionSave517.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             }
@@ -166,23 +166,23 @@ public class ExceptionServlet517 extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if ("admin".equals((String) currentUserType)) {
-                List<Excp517> recordList = recordDao.recordList(con, record);
+                List<Excp> recordList = recordDao.recordList(con, record);
                 request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
                 request.setAttribute("exceptionList", recordList);
                 request.setAttribute("mainPage", "admin/excp517.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
-                DormManager502 manager = (DormManager502) (session.getAttribute("currentUser"));
+                DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
-                String buildName = DormBuildDao502.dormBuildName(con, buildId);
-                List<Excp517> recordList = recordDao.recordListWithBuild(con, record, buildId);
+                String buildName = DormBuildDao.dormBuildName(con, buildId);
+                List<Excp> recordList = recordDao.recordListWithBuild(con, record, buildId);
                 request.setAttribute("dormBuildName", buildName);
                 request.setAttribute("exceptionList", recordList);
                 request.setAttribute("mainPage", "dormManager/excp517.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
-                Student517 student517 = (Student517) (session.getAttribute("currentUser"));
-                List<Excp517> recordList = recordDao.recordListWithNumber(con, record, student517.getStuNumber());
+                Student student = (Student) (session.getAttribute("currentUser"));
+                List<Excp> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
                 request.setAttribute("exceptionList", recordList);
                 request.setAttribute("mainPage", "student/exception517.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
@@ -208,25 +208,25 @@ public class ExceptionServlet517 extends HttpServlet {
         } else {
             state = "已完成";
         }
-        Excp517 excp517 = new Excp517();
-        excp517.setExcpId(Integer.parseInt(excpId));
-        excp517.setState(state);
-        excp517.setDetail(detail);
+        Excp excp = new Excp();
+        excp.setExcpId(Integer.parseInt(excpId));
+        excp.setState(state);
+        excp.setDetail(detail);
 //        excp.setDormBuildId();
         try {
             Connection con = dbUtil.getCon();
 
-            int lines = recordDao.recordUpdate(con, excp517);
+            int lines = recordDao.recordUpdate(con, excp);
             if (lines != 0) {
                 System.out.println("修改成功");
             } else {
                 System.out.println("修改失败");
             }
             HttpSession session = request.getSession();
-            DormManager502 manager = (DormManager502) (session.getAttribute("currentUser"));
+            DormManager manager = (DormManager) (session.getAttribute("currentUser"));
             int buildId = manager.getDormBuildId();
-            String buildName = DormBuildDao502.dormBuildName(con, buildId);
-            List<Excp517> recordList = recordDao.recordListWithBuild(con, excp517, buildId);
+            String buildName = DormBuildDao.dormBuildName(con, buildId);
+            List<Excp> recordList = recordDao.recordListWithBuild(con, excp, buildId);
             request.setAttribute("dormBuildName", buildName);
             request.setAttribute("exceptionList", recordList);
             request.setAttribute("mainPage", "dormManager/excp517.jsp");
@@ -240,7 +240,7 @@ public class ExceptionServlet517 extends HttpServlet {
     private void upload(HttpServletRequest request, HttpServletResponse response) {
 
         try {
-            Excp517 excp517 = new Excp517();
+            Excp excp = new Excp();
             String date = null;
             String stuNum = null;
             String dormBuildId = null;
@@ -275,19 +275,19 @@ public class ExceptionServlet517 extends HttpServlet {
                     String tmp_name = fileitem.getFieldName();
                     if ("stuNum".equals(tmp_name)) {
                         stuNum = fileitem.getString("utf-8");
-                        excp517.setStuNum(stuNum);
+                        excp.setStuNum(stuNum);
                     } else if ("tel".equals(tmp_name)) {
                         tel = fileitem.getString("utf-8");
-                        excp517.setTel(tel);
+                        excp.setTel(tel);
                     } else if ("dormBuildId".equals(tmp_name)) {
                         dormBuildId = fileitem.getString("utf-8");
-                        excp517.setDormBuildId(Integer.parseInt(dormBuildId));
+                        excp.setDormBuildId(Integer.parseInt(dormBuildId));
                     } else if ("detail".equals(tmp_name)) {
                         detail = fileitem.getString("utf-8");
-                        excp517.setDetail(detail);
+                        excp.setDetail(detail);
                     } else if ("date".equals(tmp_name)) {
                         date = fileitem.getString("utf-8");
-                        excp517.setDate(date);
+                        excp.setDate(date);
                     }
                 } else {
                     // 获取上传的文件名
@@ -300,7 +300,7 @@ public class ExceptionServlet517 extends HttpServlet {
                         // 文件名需要唯一
                         filename = UUID.randomUUID().toString() + "_" + filename;
                         imgUrl = filename;
-                        excp517.setImgUrl(imgUrl);
+                        excp.setImgUrl(imgUrl);
                         // 在服务器创建同名文件
                         String webPath = "/resources/img/";
                         //将服务器中文件夹路径与文件名组合成完整的服务器端路径
@@ -331,9 +331,9 @@ public class ExceptionServlet517 extends HttpServlet {
                 }
             }
             Connection con = dbUtil.getCon();
-            excp517.setDormBuildName(DormBuildDao502.dormBuildName(con, excp517.getDormBuildId()));
+            excp.setDormBuildName(DormBuildDao.dormBuildName(con, excp.getDormBuildId()));
             // 将数据插入到数据库中
-            int s = recordDao.recordAdd(con, excp517);
+            int s = recordDao.recordAdd(con, excp);
             if (s != 0) {
                 System.out.println("添加成功");
             }
@@ -351,7 +351,7 @@ public class ExceptionServlet517 extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if (StringUtil.isNotEmpty(excpId)) {
-                Excp517 record = recordDao.recordShow(con, excpId);
+                Excp record = recordDao.recordShow(con, excpId);
                 request.setAttribute("exception", record);
             } else {
                 Calendar rightNow = Calendar.getInstance();
@@ -373,24 +373,24 @@ public class ExceptionServlet517 extends HttpServlet {
 
     private void recordPreSave(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Student517 student517 = (Student517) (session.getAttribute("currentUser"));
-        String stuNum = student517.getStuNumber();
-        int dormBuildId = student517.getDormBuildId();
-        Excp517 excp517 = new Excp517();
-        excp517.setStuNum(stuNum);
-        excp517.setDormBuildId(dormBuildId);
-        excp517.setDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd"));
+        Student student = (Student) (session.getAttribute("currentUser"));
+        String stuNum = student.getStuNumber();
+        int dormBuildId = student.getDormBuildId();
+        Excp excp = new Excp();
+        excp.setStuNum(stuNum);
+        excp.setDormBuildId(dormBuildId);
+        excp.setDate(DateUtil.formatDate(new Date(), "yyyy-MM-dd"));
 
         Connection con = null;
         try {
             con = dbUtil.getCon();
             Calendar rightNow = Calendar.getInstance();
             SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
-            excp517.setDormBuildName(DormBuildDao502.dormBuildName(con, dormBuildId));
+            excp.setDormBuildName(DormBuildDao.dormBuildName(con, dormBuildId));
             String sysDatetime = fmt.format(rightNow.getTime());
             request.setAttribute("studentNumber", stuNum);
             request.setAttribute("date", sysDatetime);
-            request.setAttribute("exception", excp517);
+            request.setAttribute("exception", excp);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

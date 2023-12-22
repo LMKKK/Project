@@ -13,12 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.dao.DormBuildDao502;
-import com.dao.RecordDao509;
-import com.dao.StudentDao517;
-import com.model.DormManager502;
-import com.model.Record509;
-import com.model.Student517;
+import com.dao.DormBuildDao;
+import com.dao.RecordDao;
+import com.dao.StudentDao;
+import com.model.DormManager;
+import com.model.Record;
+import com.model.Student;
 import com.util.DBUtils;
 import com.util.StringUtil;
 
@@ -28,7 +28,7 @@ public class RecordServlet509 extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DBUtils dbUtil = new DBUtils();
-    RecordDao509 recordDao509 = new RecordDao509();
+    RecordDao recordDao = new RecordDao();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -49,7 +49,7 @@ public class RecordServlet509 extends HttpServlet {
         String startDate = request.getParameter("startDate");
         String endDate = request.getParameter("endDate");
 
-        Record509 record509 = new Record509();
+        Record record = new Record();
         if ("preSave".equals(action)) {
             recordPreSave(request, response);
             return;
@@ -62,15 +62,15 @@ public class RecordServlet509 extends HttpServlet {
         } else if ("list".equals(action)) {
             if (StringUtil.isNotEmpty(s_studentText)) {
                 if ("name".equals(searchType)) {
-                    record509.setStudentName(s_studentText);
+                    record.setStudentName(s_studentText);
                 } else if ("number".equals(searchType)) {
-                    record509.setStudentNumber(s_studentText);
+                    record.setStudentNumber(s_studentText);
                 } else if ("dorm".equals(searchType)) {
-                    record509.setDormName(s_studentText);
+                    record.setDormName(s_studentText);
                 }
             }
             if (StringUtil.isNotEmpty(dormBuildId)) {
-                record509.setDormBuildId(Integer.parseInt(dormBuildId));
+                record.setDormBuildId(Integer.parseInt(dormBuildId));
             }
             session.removeAttribute("s_studentText");
             session.removeAttribute("searchType");
@@ -81,11 +81,11 @@ public class RecordServlet509 extends HttpServlet {
         } else if ("search".equals(action)) {
             if (StringUtil.isNotEmpty(s_studentText)) {
                 if ("name".equals(searchType)) {
-                    record509.setStudentName(s_studentText);
+                    record.setStudentName(s_studentText);
                 } else if ("number".equals(searchType)) {
-                    record509.setStudentNumber(s_studentText);
+                    record.setStudentNumber(s_studentText);
                 } else if ("dorm".equals(searchType)) {
-                    record509.setDormName(s_studentText);
+                    record.setDormName(s_studentText);
                 }
                 session.setAttribute("s_studentText", s_studentText);
                 session.setAttribute("searchType", searchType);
@@ -94,19 +94,19 @@ public class RecordServlet509 extends HttpServlet {
                 session.removeAttribute("searchType");
             }
             if (StringUtil.isNotEmpty(startDate)) {
-                record509.setStartDate(startDate);
+                record.setStartDate(startDate);
                 session.setAttribute("startDate", startDate);
             } else {
                 session.removeAttribute("startDate");
             }
             if (StringUtil.isNotEmpty(endDate)) {
-                record509.setEndDate(endDate);
+                record.setEndDate(endDate);
                 session.setAttribute("endDate", endDate);
             } else {
                 session.removeAttribute("endDate");
             }
             if (StringUtil.isNotEmpty(dormBuildId)) {
-                record509.setDormBuildId(Integer.parseInt(dormBuildId));
+                record.setDormBuildId(Integer.parseInt(dormBuildId));
                 session.setAttribute("buildToSelect", dormBuildId);
             } else {
                 session.removeAttribute("buildToSelect");
@@ -117,24 +117,24 @@ public class RecordServlet509 extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if ("admin".equals((String) currentUserType)) {
-                List<Record509> record509List = recordDao509.recordList(con, record509);
-                request.setAttribute("dormBuildList", recordDao509.dormBuildList(con));
-                request.setAttribute("recordList", record509List);
+                List<Record> recordList = recordDao.recordList(con, record);
+                request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
+                request.setAttribute("recordList", recordList);
                 request.setAttribute("mainPage", "admin/record509.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
-                DormManager502 manager = (DormManager502) (session.getAttribute("currentUser"));
+                DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
-                String buildName = DormBuildDao502.dormBuildName(con, buildId);
-                List<Record509> record509List = recordDao509.recordListWithBuild(con, record509, buildId);
+                String buildName = DormBuildDao.dormBuildName(con, buildId);
+                List<Record> recordList = recordDao.recordListWithBuild(con, record, buildId);
                 request.setAttribute("dormBuildName", buildName);
-                request.setAttribute("recordList", record509List);
+                request.setAttribute("recordList", recordList);
                 request.setAttribute("mainPage", "dormManager/record509.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
-                Student517 student517 = (Student517) (session.getAttribute("currentUser"));
-                List<Record509> record509List = recordDao509.recordListWithNumber(con, record509, student517.getStuNumber());
-                request.setAttribute("recordList", record509List);
+                Student student = (Student) (session.getAttribute("currentUser"));
+                List<Record> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
+                request.setAttribute("recordList", recordList);
                 request.setAttribute("mainPage", "student/record509.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             }
@@ -155,7 +155,7 @@ public class RecordServlet509 extends HttpServlet {
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            recordDao509.recordDelete(con, recordId);
+            recordDao.recordDelete(con, recordId);
             request.getRequestDispatcher("record?action=list").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -174,10 +174,10 @@ public class RecordServlet509 extends HttpServlet {
         String studentNumber = request.getParameter("studentNumber");
         String date = request.getParameter("date");
         String detail = request.getParameter("detail");
-        Record509 record509 = new Record509(studentNumber, date, detail);
+        Record record = new Record(studentNumber, date, detail);
         if (StringUtil.isNotEmpty(recordId)) {
             if (Integer.parseInt(recordId) != 0) {
-                record509.setRecordId(Integer.parseInt(recordId));
+                record.setRecordId(Integer.parseInt(recordId));
             }
         }
         Connection con = null;
@@ -185,27 +185,27 @@ public class RecordServlet509 extends HttpServlet {
             con = dbUtil.getCon();
             int saveNum = 0;
             HttpSession session = request.getSession();
-            DormManager502 manager = (DormManager502) (session.getAttribute("currentUser"));
+            DormManager manager = (DormManager) (session.getAttribute("currentUser"));
             int buildId = manager.getDormBuildId();
-            Student517 student517 = StudentDao517.getNameById(con, studentNumber, buildId);
-            if (student517.getName() == null) {
-                request.setAttribute("record", record509);
+            Student student = StudentDao.getNameById(con, studentNumber, buildId);
+            if (student.getName() == null) {
+                request.setAttribute("record", record);
                 request.setAttribute("error", "????????????????????");
                 request.setAttribute("mainPage", "dormManager/recordSave509.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else {
-                record509.setDormBuildId(student517.getDormBuildId());
-                record509.setStudentName(student517.getName());
-                record509.setDormName(student517.getDormName());
+                record.setDormBuildId(student.getDormBuildId());
+                record.setStudentName(student.getName());
+                record.setDormName(student.getDormName());
                 if (StringUtil.isNotEmpty(recordId) && Integer.parseInt(recordId) != 0) {
-                    saveNum = recordDao509.recordUpdate(con, record509);
+                    saveNum = recordDao.recordUpdate(con, record);
                 } else {
-                    saveNum = recordDao509.recordAdd(con, record509);
+                    saveNum = recordDao.recordAdd(con, record);
                 }
                 if (saveNum > 0) {
                     request.getRequestDispatcher("record?action=list").forward(request, response);
                 } else {
-                    request.setAttribute("record", record509);
+                    request.setAttribute("record", record);
                     request.setAttribute("error", "???????");
                     request.setAttribute("mainPage", "dormManager/recordSave509.jsp");
                     request.getRequestDispatcher("mainManager.jsp").forward(request, response);
@@ -230,8 +230,8 @@ public class RecordServlet509 extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if (StringUtil.isNotEmpty(recordId)) {
-                Record509 record509 = recordDao509.recordShow(con, recordId);
-                request.setAttribute("record", record509);
+                Record record = recordDao.recordShow(con, recordId);
+                request.setAttribute("record", record);
             } else {
                 Calendar rightNow = Calendar.getInstance();
                 SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");

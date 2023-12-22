@@ -57,8 +57,8 @@
             </span>
             <select id="buildToSelect" name="buildToSelect" style="width: 110px;">
                 <option value="">全部宿舍楼</option>
-                <c:forEach var="dormBuild502" items="${dormBuildList }">
-                    <option value="${dormBuild502.dormBuildId }" ${buildToSelect==dormBuild502.dormBuildId?'selected':'' }>${dormBuild502.dormBuildName }</option>
+                <c:forEach var="dormBuild" items="${dormBuildList }">
+                    <option value="${dormBuild.dormBuildId }" ${buildToSelect==dormBuild.dormBuildId?'selected':'' }>${dormBuild.dormBuildName }</option>
                 </c:forEach>
             </select>
             <select id="searchType" name="searchType" style="width: 80px;">
@@ -84,14 +84,14 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" var="count509" items="${countList }">
+            <c:forEach varStatus="i" var="count" items="${countList }">
                 <tr>
-                    <td>${count509.date }</td>
-                    <td>${count509.stuNum }</td>
-                    <td>${count509.stuName }</td>
-                    <td>${count509.dormBuildName==null?"无":count509.dormBuildName }</td>
-                    <td>${count509.state }</td>
-                    <td>${count509.detail }</td>
+                    <td>${count.date }</td>
+                    <td>${count.stuNum }</td>
+                    <td>${count.stuName }</td>
+                    <td>${count.dormBuildName==null?"无":count.dormBuildName }</td>
+                    <td>${count.state }</td>
+                    <td>${count.detail }</td>
                 </tr>
             </c:forEach>
             </tbody>

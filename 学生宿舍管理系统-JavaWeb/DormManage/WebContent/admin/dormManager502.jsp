@@ -64,20 +64,20 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" var="dormManager502" items="${dormManager502List }">
+            <c:forEach varStatus="i" var="dormManager" items="${dormManagerList }">
                 <tr>
-                    <td>${dormManager502.name }</td>
-                    <td>${dormManager502.sex }</td>
-                    <td>${dormManager502.tel }</td>
-                    <td>${dormManager502.dormBuildName==null?"无":dormManager502.dormBuildName }</td>
-                    <td>${dormManager502.userName }</td>
+                    <td>${dormManager.name }</td>
+                    <td>${dormManager.sex }</td>
+                    <td>${dormManager.tel }</td>
+                    <td>${dormManager.dormBuildName==null?"无":dormManager.dormBuildName }</td>
+                    <td>${dormManager.userName }</td>
                     <td>
                         <button class="btn btn-mini btn-info" type="button"
-                                onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${dormManager502.dormManagerId }'">
+                                onclick="javascript:window.location='dormManager?action=preSave&dormManagerId=${dormManager.dormManagerId }'">
                             修改
                         </button>&nbsp;
                         <button class="btn btn-mini btn-danger" type="button"
-                                onclick="dormManagerDelete(${dormManager502.dormManagerId})">删除
+                                onclick="dormManagerDelete(${dormManager.dormManagerId})">删除
                         </button>
                     </td>
                 </tr>

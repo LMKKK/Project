@@ -19,7 +19,7 @@
 <div class="data_list">
     <div class="data_list_title">
         <c:choose>
-            <c:when test="${student517.studentId!=null }">
+            <c:when test="${student.studentId!=null }">
                 修改违禁记录
             </c:when>
             <c:otherwise>

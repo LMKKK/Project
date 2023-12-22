@@ -4,6 +4,7 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
+import java.sql.SQLException;
 
 public class DBUtils {
 
@@ -30,4 +31,19 @@ public class DBUtils {
         }
     }
 
+    /**
+     * 判断数据库连接是否失效
+     * @param con
+     * @return
+     */
+    public static boolean isValidCon(Connection con) {
+        try {
+            if (con == null || con.isClosed()) {
+                throw new RuntimeException("数据库连接已失效，请刷新或重新登录");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 }

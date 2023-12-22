@@ -18,7 +18,6 @@
         });
         $('.datatable').dataTable({
             "oLanguage": {
-                // "sUrl": "/DormManage/resources/media/zh_CN.json"
                 "sUrl": "${pageContext.request.contextPath}/resources/media/zh_CN.json"
             },
             "bLengthChange": false, //改变每页显示数据数量
@@ -62,8 +61,8 @@
             </span>
             <select id="buildToSelect" name="buildToSelect" style="width: 110px;">
                 <option value="">全部宿舍楼</option>
-                <c:forEach var="dormBuild502" items="${dormBuildList }">
-                    <option value="${dormBuild502.dormBuildId }" ${buildToSelect==dormBuild502.dormBuildId?'selected':'' }>${dormBuild502.dormBuildName }</option>
+                <c:forEach var="dormBuild" items="${dormBuildList }">
+                    <option value="${dormBuild.dormBuildId }" ${buildToSelect==dormBuild.dormBuildId?'selected':'' }>${dormBuild.dormBuildName }</option>
                 </c:forEach>
             </select>
             <select id="searchType" name="searchType" style="width: 80px;">
@@ -91,17 +90,17 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach varStatus="i" var="record509" items="${recordList }">
+            <c:forEach varStatus="i" var="record" items="${recordList }">
                 <tr>
-                    <td>${record509.date }</td>
-                    <td>${record509.studentNumber }</td>
-                    <td>${record509.studentName }</td>
-                    <td>${record509.dormBuildName==null?"无":record509.dormBuildName }</td>
-                    <td>${record509.dormName }</td>
-                    <td>${record509.detail }</td>
+                    <td>${record.date }</td>
+                    <td>${record.studentNumber }</td>
+                    <td>${record.studentName }</td>
+                    <td>${record.dormBuildName==null?"无":record.dormBuildName }</td>
+                    <td>${record.dormName }</td>
+                    <td>${record.detail }</td>
                     <td>
                         <button class="btn btn-mini btn-danger" type="button"
-                                onclick="recordDelete(${record509.recordId })">删除
+                                onclick="recordDelete(${record.recordId })">删除
                         </button>
                     </td>
                 </tr>

@@ -56,8 +56,8 @@
             </span>
             <select id="buildToSelect" name="buildToSelect" style="width: 110px;">
                 <option value="">全部宿舍楼</option>
-                <c:forEach var="dormBuild502" items="${dormBuildList }">
-                    <option value="${dormBuild502.dormBuildId }" ${buildToSelect==dormBuild502.dormBuildId?'selected':'' }>${dormBuild502.dormBuildName }</option>
+                <c:forEach var="dormBuild" items="${dormBuildList }">
+                    <option value="${dormBuild.dormBuildId }" ${buildToSelect==dormBuild.dormBuildId?'selected':'' }>${dormBuild.dormBuildName }</option>
                 </c:forEach>
             </select>
             <select id="searchType" name="searchType" style="width: 80px;">

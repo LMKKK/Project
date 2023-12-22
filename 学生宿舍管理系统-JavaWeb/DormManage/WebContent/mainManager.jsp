@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
          pageEncoding="utf-8" %>
-<%@ page import="com.model.Admin509" %>
-<%@ page import="com.model.DormManager502" %>
-<%@ page import="com.model.Student517" %>
+<%@ page import="com.model.Admin" %>
+<%@ page import="com.model.DormManager" %>
+<%@ page import="com.model.Student" %>
 
 <html lang="zh">
 <head>

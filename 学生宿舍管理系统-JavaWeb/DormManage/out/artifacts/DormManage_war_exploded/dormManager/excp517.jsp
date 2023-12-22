@@ -43,7 +43,7 @@
     <form name="myForm" class="form-search" method="post" action="excp?action=search"
           style="padding-bottom: 0px">
         <%--        <button class="btn btn-success" type="button" style="margin-right: 50px;float:left;"--%>
-        <%--                onclick="javascript:window.location='excp517?action=preSave'">添加--%>
+        <%--                onclick="javascript:window.location='excp?action=preSave'">添加--%>
         <%--        </button>--%>
         <div class="text-right" style="display: inline-block;width: 70%;float:right">
             <span class="input-group date form_date col-md-2 text-right" data-date="" data-date-format="yyyy-mm-dd"
