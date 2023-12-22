@@ -103,7 +103,7 @@
     <div region="north" style="height: 100px;">
         <div align="left" style="width: 80%;height:100px ;float: left;padding-top: 40px;padding-left: 30px;"><font
                 color="white" size="6">宿舍管理系统</font></div>
-        <div style="padding-top: 70px;padding-right: 20px;">当前用户：&nbsp;<font color="red">${currentUser.userName }</font>
+        <div style="padding-top: 70px;padding-right: 20px;">当前用户：&nbsp;<font color="red">${currentUser.name }</font>
         </div>
     </div>
 </div>
