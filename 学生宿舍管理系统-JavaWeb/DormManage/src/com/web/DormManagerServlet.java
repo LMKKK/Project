@@ -32,7 +32,7 @@ public class DormManagerServlet extends HttpServlet {
 
     public static final String PAGE_MANAGER_ADMIN = "admin/dormManager.jsp";
 
-    public static final String SEARCH_TYPE = "searchType";
+    public static final String SEARCH_TYPE = "managerSearchType";
     public static final String SEARCH_KEY = "s_dormManagerText";
 
     public static final String ACTION_TYPE = "action";
@@ -40,6 +40,8 @@ public class DormManagerServlet extends HttpServlet {
     public static final String SEARCH_TYPE_NAME = "name";
 
     public static final String SEARCH_TYPE_USERNAME = "userName";
+
+    public static final String PAGE_MANGER = "admin/dormManger.jsp";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -67,7 +69,7 @@ public class DormManagerServlet extends HttpServlet {
             return;
         } else if (OptConstrant.LIST.equals(action)) {
             if (StringUtil.isNotEmpty(searchKey)) {
-                switch (searchType){
+                switch (searchType) {
                     case SEARCH_TYPE_NAME:
                         dormManager.setName(searchKey);
                         break;
@@ -75,41 +77,42 @@ public class DormManagerServlet extends HttpServlet {
                         dormManager.setUserName(searchKey);
                         break;
                 }
-                session.setAttribute("searchType", searchType);
-                session.setAttribute("s_dormManagerText", searchKey);
-            }
-            session.removeAttribute("s_dormManagerText");
-            session.removeAttribute("searchType");
-            request.setAttribute("s_dormManagerText", searchKey);
-            request.setAttribute("searchType", searchType);
-        } else if ("search".equals(action)) {
-            if (StringUtil.isNotEmpty(searchKey)) {
+                session.setAttribute(SEARCH_TYPE, searchType);
+                session.setAttribute(SEARCH_KEY, searchKey);
             } else {
-                session.removeAttribute("s_dormManagerText");
-                session.removeAttribute("searchType");
+                session.removeAttribute(SEARCH_TYPE);
+                session.removeAttribute(SEARCH_KEY);
             }
+            request.setAttribute(SEARCH_KEY, searchKey);
+            request.setAttribute(SEARCH_TYPE, searchType);
         } else {
-            if (StringUtil.isNotEmpty(searchKey)) {
-                if ("name".equals(searchType)) {
-                    dormManager.setName(searchKey);
-                } else if ("userName".equals(searchType)) {
-                    dormManager.setUserName(searchKey);
-                }
-                session.setAttribute("searchType", searchType);
-                session.setAttribute("s_dormManagerText", searchKey);
-            }
+            // action为空时， 防止系统崩溃白页， 兜底方案
             if (StringUtil.isEmpty(searchKey)) {
-                Object o1 = session.getAttribute("s_dormManagerText");
-                Object o2 = session.getAttribute("searchType");
-                if (o1 != null) {
-                    if ("name".equals((String) o2)) {
-                        dormManager.setName((String) o1);
-                    } else if ("userName".equals((String) o2)) {
-                        dormManager.setUserName((String) o1);
-                    }
+                searchKey = (String) session.getAttribute(SEARCH_KEY);
+            }
+
+            if (StringUtil.isEmpty(searchType)) {
+                searchType = (String) session.getAttribute(SEARCH_TYPE);
+            }
+
+            if (StringUtil.isNotEmpty(searchKey)) {
+                switch (searchType) {
+                    case SEARCH_TYPE_NAME:
+                        dormManager.setName(searchKey);
+                        break;
+                    case SEARCH_TYPE_USERNAME:
+                        dormManager.setUserName(searchKey);
+                        break;
                 }
+                session.setAttribute(SEARCH_TYPE, searchType);
+                session.setAttribute(SEARCH_KEY, searchKey);
             }
         }
+        // 刷新页面
+        flushPage(dormManager, request, response);
+    }
+
+    private void flushPage(DormManager dormManager, HttpServletRequest request, HttpServletResponse response) {
         Connection con = null;
         try {
             con = dbUtil.getCon();
@@ -160,32 +163,42 @@ public class DormManagerServlet extends HttpServlet {
         if (StringUtil.isNotEmpty(dormManagerId)) {
             dormManager.setDormManagerId(Integer.parseInt(dormManagerId));
         }
+
+        String errMsg = null; // 页面的错误信息
+
         Connection con = null;
         try {
             con = dbUtil.getCon();
             int saveNum = 0;
             if (StringUtil.isNotEmpty(dormManagerId)) {
+                // dormMangerId不为空，则是修改信息
                 saveNum = dormManagerDao.dormManagerUpdate(con, dormManager);
-            } else if (dormManagerDao.haveManagerByUser(con, dormManager.getUserName())) {
-                request.setAttribute("dormManager502", dormManager);
-                request.setAttribute("error", "保存失败");
-                request.setAttribute("mainPage", "admin/dormManagerSave502.jsp");
-                request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-                try {
-                    dbUtil.closeCon(con);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return;
             } else {
+                // dormMangerID为空,则是新增
+                // 检查用户名是否已存在
+                if (dormManagerDao.haveManagerByUser(con, dormManager.getUserName())) {
+                    errMsg = "用户名不可重复，请重新输入";
+                    request.setAttribute(PageMeta.DORM_MANAGER, dormManager);
+                    request.setAttribute("error", errMsg);
+                    request.setAttribute("mainPage", "admin/dormManagerSave.jsp");
+                    request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+                    try {
+                        dbUtil.closeCon(con);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 saveNum = dormManagerDao.dormManagerAdd(con, dormManager);
             }
+
+
+
             if (saveNum > 0) {
                 request.getRequestDispatcher("dormManager?action=list").forward(request, response);
             } else {
                 request.setAttribute("dormManager", dormManager);
                 request.setAttribute("error", "保存失败");
-                request.setAttribute("mainPage", "dormManager/dormManagerSave502.jsp");
+                request.setAttribute("mainPage", "dormManager/dormManagerSave.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             }
         } catch (Exception e) {
@@ -203,11 +216,12 @@ public class DormManagerServlet extends HttpServlet {
                                     HttpServletResponse response) throws ServletException, IOException {
         String dormManagerId = request.getParameter("dormManagerId");
         if (StringUtil.isNotEmpty(dormManagerId)) {
+            // dormMangeId 不为空，则是修改
             Connection con = null;
             try {
                 con = dbUtil.getCon();
                 DormManager dormManager = dormManagerDao.dormManagerShow(con, dormManagerId);
-                request.setAttribute("dormManager502", dormManager);
+                request.setAttribute(PageMeta.DORM_MANAGER, dormManager);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -218,7 +232,7 @@ public class DormManagerServlet extends HttpServlet {
                 }
             }
         }
-        request.setAttribute("mainPage", "admin/dormManagerSave502.jsp");
-        request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+        request.setAttribute(PageConstrant.MAIN_PAGE, "admin/dormManagerSave.jsp");
+        request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
     }
 }

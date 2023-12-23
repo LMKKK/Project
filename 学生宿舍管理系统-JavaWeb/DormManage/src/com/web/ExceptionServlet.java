@@ -93,14 +93,14 @@ public class ExceptionServlet extends HttpServlet {
 
             if ("admin".equals((String) currentUserType)) {
 
-                request.setAttribute("mainPage", "admin/exceptionSave517.jsp");
+                request.setAttribute("mainPage", "admin/exceptionSave.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
                 request.setAttribute("mainPage", "dormManager/excpSave517.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
                 Student student = (Student) (session.getAttribute("currentUser"));
-                request.setAttribute("mainPage", "student/exceptionSave517.jsp");
+                request.setAttribute("mainPage", "student/exceptionSave.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             }
             return;
@@ -169,7 +169,7 @@ public class ExceptionServlet extends HttpServlet {
                 List<Excp> recordList = recordDao.recordList(con, record);
                 request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
                 request.setAttribute("exceptionList", recordList);
-                request.setAttribute("mainPage", "admin/excp517.jsp");
+                request.setAttribute("mainPage", "admin/excp.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
@@ -178,7 +178,7 @@ public class ExceptionServlet extends HttpServlet {
                 List<Excp> recordList = recordDao.recordListWithBuild(con, record, buildId);
                 request.setAttribute("dormBuildName", buildName);
                 request.setAttribute("exceptionList", recordList);
-                request.setAttribute("mainPage", "dormManager/excp517.jsp");
+                request.setAttribute("mainPage", "dormManager/excp.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
                 Student student = (Student) (session.getAttribute("currentUser"));
@@ -229,7 +229,7 @@ public class ExceptionServlet extends HttpServlet {
             List<Excp> recordList = recordDao.recordListWithBuild(con, excp, buildId);
             request.setAttribute("dormBuildName", buildName);
             request.setAttribute("exceptionList", recordList);
-            request.setAttribute("mainPage", "dormManager/excp517.jsp");
+            request.setAttribute("mainPage", "dormManager/excp.jsp");
             request.getRequestDispatcher("mainManager.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();

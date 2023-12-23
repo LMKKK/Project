@@ -95,7 +95,7 @@ public class DormBuildServlet extends HttpServlet {
 //            String pageCode = this.genPagation(total, Integer.parseInt(page), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
 //            request.setAttribute("pageCode", pageCode);
             request.setAttribute("dormBuild502List", dormBuildList);
-            request.setAttribute("mainPage", "admin/dormBuild502.jsp");
+            request.setAttribute("mainPage", "admin/dormBuild.jsp");
             request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -147,7 +147,7 @@ public class DormBuildServlet extends HttpServlet {
             request.setAttribute("dormBuildId", dormBuildId);
             request.setAttribute("managerListWithId", managerListWithId);
             request.setAttribute("managerListToSelect", managerListToSelect);
-            request.setAttribute("mainPage", "admin/selectManager502.jsp");
+            request.setAttribute("mainPage", "admin/selectManager.jsp");
             request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,7 +200,7 @@ public class DormBuildServlet extends HttpServlet {
             } else {
                 request.setAttribute("dormBuild", dormBuild);
                 request.setAttribute("error", "±£¥Ê ß∞‹");
-                request.setAttribute("mainPage", "dormBuild/dormBuildSave502.jsp");
+                request.setAttribute("mainPage", "dormBuild/dormBuildSave.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             }
         } catch (Exception e) {
@@ -234,7 +234,7 @@ public class DormBuildServlet extends HttpServlet {
             }
         }
 
-        request.setAttribute("mainPage", "admin/dormBuildSave502.jsp");
+        request.setAttribute("mainPage", "admin/dormBuildSave.jsp");
         request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
     }
 

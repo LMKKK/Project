@@ -120,7 +120,7 @@ public class RecordServlet extends HttpServlet {
                 List<Record> recordList = recordDao.recordList(con, record);
                 request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
                 request.setAttribute("recordList", recordList);
-                request.setAttribute("mainPage", "admin/record509.jsp");
+                request.setAttribute("mainPage", "admin/record.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
@@ -129,13 +129,13 @@ public class RecordServlet extends HttpServlet {
                 List<Record> recordList = recordDao.recordListWithBuild(con, record, buildId);
                 request.setAttribute("dormBuildName", buildName);
                 request.setAttribute("recordList", recordList);
-                request.setAttribute("mainPage", "dormManager/record509.jsp");
+                request.setAttribute("mainPage", "dormManager/record.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
                 Student student = (Student) (session.getAttribute("currentUser"));
                 List<Record> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
                 request.setAttribute("recordList", recordList);
-                request.setAttribute("mainPage", "student/record509.jsp");
+                request.setAttribute("mainPage", "student/record.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             }
         } catch (Exception e) {

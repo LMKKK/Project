@@ -40,9 +40,9 @@
                 onclick="javascript:window.location='dormManager?action=preSave'">添加
         </button>
         <span class="data_search">
-					<select id="searchType" name="searchType" style="width: 80px;">
+					<select id="searchType" name="managerSearchType" style="width: 80px;">
 					<option value="name">姓名</option>
-					<option value="userName" ${searchType eq "userName"?'selected':'' }>用户名</option>
+					<option value="userName" ${managerSearchType eq "userName"?'selected':'' }>用户名</option>
 					</select>
 					&nbsp;<input id="s_dormManagerText" name="s_dormManagerText" type="text"
                                  style="width:120px;height: 30px;" class="input-medium search-query"
@@ -53,7 +53,6 @@
     <div>
         <table class="table table-hover table-striped table-bordered dataTable">
             <thead>
-
             <tr>
                 <th>姓名</th>
                 <th>性别</th>

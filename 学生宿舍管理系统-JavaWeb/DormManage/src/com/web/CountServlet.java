@@ -124,7 +124,7 @@ public class CountServlet extends HttpServlet {
                 System.out.println(countList);
                 request.setAttribute("dormBuildList", countDao.dormBuildList(con));
                 request.setAttribute("countList", countList);
-                request.setAttribute("mainPage", "admin/count509.jsp");
+                request.setAttribute("mainPage", "admin/count.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
@@ -134,7 +134,7 @@ public class CountServlet extends HttpServlet {
                 System.out.println(countList);
                 request.setAttribute("dormBuildName", buildName);
                 request.setAttribute("countList", countList);
-                request.setAttribute("mainPage", "dormManager/count509.jsp");
+                request.setAttribute("mainPage", "dormManager/count.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             }
         } catch (Exception e) {

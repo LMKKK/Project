@@ -66,14 +66,14 @@ public class PasswordServlet extends HttpServlet {
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
                     request.setAttribute("error", "修改成功 ");
-                    request.setAttribute("mainPage", "admin/passwordChange509.jsp");
+                    request.setAttribute("mainPage", "admin/passwordChange.jsp");
                     request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
                 } else {
                     request.setAttribute("oldPassword", oldPassword);
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
                     request.setAttribute("error", "原密码错误");
-                    request.setAttribute("mainPage", "admin/passwordChange509.jsp");
+                    request.setAttribute("mainPage", "admin/passwordChange.jsp");
                     request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
                 }
             } else if ("dormManager".equals((String) currentUserType)) {
@@ -85,14 +85,14 @@ public class PasswordServlet extends HttpServlet {
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
                     request.setAttribute("error", "修改成功 ");
-                    request.setAttribute("mainPage", "dormManager/passwordChange509.jsp");
+                    request.setAttribute("mainPage", "dormManager/passwordChange.jsp");
                     request.getRequestDispatcher("mainManager.jsp").forward(request, response);
                 } else {
                     request.setAttribute("oldPassword", oldPassword);
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
                     request.setAttribute("error", "原密码错误");
-                    request.setAttribute("mainPage", "dormManager/passwordChange509.jsp");
+                    request.setAttribute("mainPage", "dormManager/passwordChange.jsp");
                     request.getRequestDispatcher("mainManager.jsp").forward(request, response);
                 }
             } else if ("student".equals((String) currentUserType)) {
@@ -104,14 +104,14 @@ public class PasswordServlet extends HttpServlet {
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
                     request.setAttribute("error", "修改成功 ");
-                    request.setAttribute("mainPage", "student/passwordChange509.jsp");
+                    request.setAttribute("mainPage", "student/passwordChange.jsp");
                     request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
                 } else {
                     request.setAttribute("oldPassword", oldPassword);
                     request.setAttribute("newPassword", newPassword);
                     request.setAttribute("rPassword", newPassword);
                     request.setAttribute("error", "原密码错误");
-                    request.setAttribute("mainPage", "student/passwordChange509.jsp");
+                    request.setAttribute("mainPage", "student/passwordChange.jsp");
                     request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
                 }
             }
@@ -131,13 +131,13 @@ public class PasswordServlet extends HttpServlet {
         HttpSession session = request.getSession();
         Object currentUserType = session.getAttribute("currentUserType");
         if ("admin".equals((String) currentUserType)) {
-            request.setAttribute("mainPage", "admin/passwordChange509.jsp");
+            request.setAttribute("mainPage", "admin/passwordChange.jsp");
             request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
         } else if ("dormManager".equals((String) currentUserType)) {
-            request.setAttribute("mainPage", "dormManager/passwordChange509.jsp");
+            request.setAttribute("mainPage", "dormManager/passwordChange.jsp");
             request.getRequestDispatcher("mainManager.jsp").forward(request, response);
         } else if ("student".equals((String) currentUserType)) {
-            request.setAttribute("mainPage", "student/passwordChange509.jsp");
+            request.setAttribute("mainPage", "student/passwordChange.jsp");
             request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
         }
     }

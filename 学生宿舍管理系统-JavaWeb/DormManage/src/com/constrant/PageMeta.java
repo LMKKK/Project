@@ -14,4 +14,5 @@ public class PageMeta {
     public static final String DORM_MANAGER_LIST = "dormManagerList";
 
     public static final String ERR_MSG = "error";
+    public static final String DORM_MANAGER = "dormManager";
 }
