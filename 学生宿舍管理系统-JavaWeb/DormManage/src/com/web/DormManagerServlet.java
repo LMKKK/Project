@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.constrant.OptConstrant;
+import com.constrant.PageConstrant;
+import com.constrant.PageMeta;
 import com.dao.DormManagerDao;
 import com.model.DormManager;
 import com.util.DBUtils;
@@ -27,6 +30,17 @@ public class DormManagerServlet extends HttpServlet {
     DBUtils dbUtil = new DBUtils();
     DormManagerDao dormManagerDao = new DormManagerDao();
 
+    public static final String PAGE_MANAGER_ADMIN = "admin/dormManager.jsp";
+
+    public static final String SEARCH_TYPE = "searchType";
+    public static final String SEARCH_KEY = "s_dormManagerText";
+
+    public static final String ACTION_TYPE = "action";
+
+    public static final String SEARCH_TYPE_NAME = "name";
+
+    public static final String SEARCH_TYPE_USERNAME = "userName";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -38,56 +52,53 @@ public class DormManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
-        String s_dormManagerText = request.getParameter("s_dormManagerText");
-        String searchType = request.getParameter("searchType");
-//        String page = request.getParameter("page");
-        String action = request.getParameter("action");
+        String searchKey = request.getParameter(SEARCH_KEY); // 搜索关键字
+        String searchType = request.getParameter(SEARCH_TYPE); // 搜索类型
+        String action = request.getParameter(ACTION_TYPE); // 操作类型
         DormManager dormManager = new DormManager();
-        if ("preSave".equals(action)) {
+        if (OptConstrant.PRE_SAVE.equals(action)) {
             dormManagerPreSave(request, response);
             return;
-        } else if ("save".equals(action)) {
+        } else if (OptConstrant.SAVE.equals(action)) {
             dormManagerSave(request, response);
             return;
-        } else if ("delete".equals(action)) {
+        } else if (OptConstrant.DELETE.equals(action)) {
             dormManagerDelete(request, response);
             return;
-        } else if ("list".equals(action)) {
-            if (StringUtil.isNotEmpty(s_dormManagerText)) {
-                if ("name".equals(searchType)) {
-                    dormManager.setName(s_dormManagerText);
-                } else if ("userName".equals(searchType)) {
-                    dormManager.setUserName(s_dormManagerText);
+        } else if (OptConstrant.LIST.equals(action)) {
+            if (StringUtil.isNotEmpty(searchKey)) {
+                switch (searchType){
+                    case SEARCH_TYPE_NAME:
+                        dormManager.setName(searchKey);
+                        break;
+                    case SEARCH_TYPE_USERNAME:
+                        dormManager.setUserName(searchKey);
+                        break;
                 }
+                session.setAttribute("searchType", searchType);
+                session.setAttribute("s_dormManagerText", searchKey);
             }
             session.removeAttribute("s_dormManagerText");
             session.removeAttribute("searchType");
-            request.setAttribute("s_dormManagerText", s_dormManagerText);
+            request.setAttribute("s_dormManagerText", searchKey);
             request.setAttribute("searchType", searchType);
         } else if ("search".equals(action)) {
-            if (StringUtil.isNotEmpty(s_dormManagerText)) {
-                if ("name".equals(searchType)) {
-                    dormManager.setName(s_dormManagerText);
-                } else if ("userName".equals(searchType)) {
-                    dormManager.setUserName(s_dormManagerText);
-                }
-                session.setAttribute("searchType", searchType);
-                session.setAttribute("s_dormManagerText", s_dormManagerText);
+            if (StringUtil.isNotEmpty(searchKey)) {
             } else {
                 session.removeAttribute("s_dormManagerText");
                 session.removeAttribute("searchType");
             }
         } else {
-            if (StringUtil.isNotEmpty(s_dormManagerText)) {
+            if (StringUtil.isNotEmpty(searchKey)) {
                 if ("name".equals(searchType)) {
-                    dormManager.setName(s_dormManagerText);
+                    dormManager.setName(searchKey);
                 } else if ("userName".equals(searchType)) {
-                    dormManager.setUserName(s_dormManagerText);
+                    dormManager.setUserName(searchKey);
                 }
                 session.setAttribute("searchType", searchType);
-                session.setAttribute("s_dormManagerText", s_dormManagerText);
+                session.setAttribute("s_dormManagerText", searchKey);
             }
-            if (StringUtil.isEmpty(s_dormManagerText)) {
+            if (StringUtil.isEmpty(searchKey)) {
                 Object o1 = session.getAttribute("s_dormManagerText");
                 Object o2 = session.getAttribute("searchType");
                 if (o1 != null) {
@@ -103,9 +114,9 @@ public class DormManagerServlet extends HttpServlet {
         try {
             con = dbUtil.getCon();
             List<DormManager> dormManagerList = dormManagerDao.dormManagerList(con, dormManager);
-            request.setAttribute("dormManager502List", dormManagerList);
-            request.setAttribute("mainPage", "admin/dormManager502.jsp");
-            request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+            request.setAttribute(PageMeta.DORM_MANAGER_LIST, dormManagerList);
+            request.setAttribute(PageConstrant.MAIN_PAGE, PAGE_MANAGER_ADMIN);
+            request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

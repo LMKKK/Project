@@ -40,7 +40,7 @@
     <div class="data_list_title">
         学生管理
     </div>
-    <form name="myForm" class="form-search" method="post" action="student?action=search" style="padding-bottom: 0px">
+    <form name="myForm" class="form-search" method="post" action="student?action=list" style="padding-bottom: 0px">
         <button class="btn btn-success" type="button" style="margin-right: 50px;"
                 onclick="javascript:window.location='student?action=preSave'">添加
         </button>

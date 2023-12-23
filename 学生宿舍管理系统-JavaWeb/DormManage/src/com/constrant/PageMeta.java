@@ -9,4 +9,9 @@ public class PageMeta {
 
     public static final String DORM_BUILD_NAME = "dormBuildName";
 
+    public static final String STUDENT = "student";
+
+    public static final String DORM_MANAGER_LIST = "dormManagerList";
+
+    public static final String ERR_MSG = "error";
 }
