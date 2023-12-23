@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 @WebServlet("/excp")
-public class ExceptionServlet517 extends HttpServlet {
+public class ExceptionServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DBUtils dbUtil = new DBUtils();

@@ -1,5 +1,8 @@
 package com.constrant;
 
+/**
+ * 用户类型的常量
+ */
 public class UserType {
     public static final String ADMIN = "1";
 

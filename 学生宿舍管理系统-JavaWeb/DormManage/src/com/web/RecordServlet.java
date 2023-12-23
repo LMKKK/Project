@@ -23,7 +23,7 @@ import com.util.DBUtils;
 import com.util.StringUtil;
 
 @WebServlet("/record")
-public class RecordServlet509 extends HttpServlet {
+public class RecordServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 

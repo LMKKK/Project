@@ -5,6 +5,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+        // 初始化 表格格式
         $('.datatable').dataTable({
             "oLanguage": {
                 "sUrl": "${pageContext.request.contextPath}/resources/media/zh_CN.json"

@@ -18,7 +18,7 @@ import com.util.DBUtils;
 import com.util.MD5Util;
 
 @WebServlet("/password")
-public class PasswordServlet509 extends HttpServlet {
+public class PasswordServlet extends HttpServlet {
 
     /**
      *

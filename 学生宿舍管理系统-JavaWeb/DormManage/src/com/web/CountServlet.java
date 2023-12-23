@@ -21,7 +21,7 @@ import java.util.List;
 
 
 @WebServlet("/count")
-public class CountServlet509 extends HttpServlet {
+public class CountServlet extends HttpServlet {
     // –Ú¡–ªØ∞Ê±æ∫≈
     private static final long serialVersionUID = 1L;
     DBUtils dbUtil = new DBUtils();

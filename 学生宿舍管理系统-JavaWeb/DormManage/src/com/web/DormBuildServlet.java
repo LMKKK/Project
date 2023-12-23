@@ -18,7 +18,7 @@ import com.util.DBUtils;
 import com.util.StringUtil;
 
 @WebServlet("/dormBuild")
-public class DormBuildServlet502 extends HttpServlet {
+public class DormBuildServlet extends HttpServlet {
 
     /**
      *

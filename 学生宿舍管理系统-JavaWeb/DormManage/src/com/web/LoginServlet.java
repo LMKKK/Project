@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.constrant.LoginConstrant;
+import com.constrant.PageConstrant;
 import com.constrant.UserType;
 import com.dao.UserDao;
 import com.model.Admin;
@@ -63,6 +64,7 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("user", null);
             request.setAttribute("error", errMsg);
             request.getRequestDispatcher("login.jsp").forward(request, response);
+            return;
         }
 
         // 到此为止，参数过滤完成，开始真正的业务操作
@@ -84,15 +86,15 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("error", loginErrMsg);
                     System.out.println("[info]----管理员密码错误!");
                     // 重新返回登录页面
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
                     rememberMe(remember, userName, password, userType, request, response);
-                    session.setAttribute("currentUserType", UserType.ADMIN);
-                    session.setAttribute("currentUser", currentAdmin);
-                    request.setAttribute("mainPage", "admin/blank.jsp");
+                    session.setAttribute(LoginConstrant.CURRENT_USER_TYPE, UserType.ADMIN);
+                    session.setAttribute(LoginConstrant.CURRENT_USER, currentAdmin);
+                    request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.ADMIN_BLANK_PAGE);
                     System.out.println("[info]----管理员成功登录");
                     // 登录成功，转发到到管理员页面
-                    request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+                    request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
                 }
             } else if (UserType.DORM_MANAGER.equals(userType)) {
 //                判断是否是宿舍管理员
@@ -101,15 +103,15 @@ public class LoginServlet extends HttpServlet {
                 if (currentDormManager == null) {
                     request.setAttribute("user", dormManager);
                     request.setAttribute("error", loginErrMsg);
-                    System.out.println("[info]----管理员密码错误！");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    System.out.println("[info]----宿管人员密码错误！");
+                    request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
                     rememberMe(remember, userName, password, userType, request, response);
-                    session.setAttribute("currentUserType", UserType.DORM_MANAGER);
-                    session.setAttribute("currentUser", currentDormManager);
-                    request.setAttribute("mainPage", "dormManager/blank.jsp");
-                    System.out.println("[info]----管理员成功登录");
-                    request.getRequestDispatcher("mainManager.jsp").forward(request, response);
+                    session.setAttribute(LoginConstrant.CURRENT_USER_TYPE, UserType.DORM_MANAGER);
+                    session.setAttribute(LoginConstrant.CURRENT_USER, currentDormManager);
+                    request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.MANAGER_BLANK_PAGE);
+                    System.out.println("[info]----宿管人员成功登录");
+                    request.getRequestDispatcher(PageConstrant.MANAGER_MAIN_PAGE).forward(request, response);
                 }
             } else if (UserType.STUDENT.equals(userType)) {
 //                判断是否是学生
@@ -119,14 +121,14 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("user", student);
                     request.setAttribute("error", "用户名或密码错误！");
                     System.out.println("[info]----学生登录失败");
-                    request.getRequestDispatcher("login.jsp").forward(request, response);
+                    request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
                     rememberMe(remember, userName, password, userType, request, response);
-                    session.setAttribute("currentUserType", UserType.STUDENT);
-                    session.setAttribute("currentUser", currentStudent);
-                    request.setAttribute("mainPage", "student/blank.jsp");
+                    session.setAttribute(LoginConstrant.CURRENT_USER_TYPE, UserType.STUDENT);
+                    session.setAttribute(LoginConstrant.CURRENT_USER, currentStudent);
+                    request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.STUDENT_BLANK_PAGE);
                     System.out.println("[info]----学生登录成功");
-                    request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
+                    request.getRequestDispatcher(PageConstrant.STUDENT_MAIN_PAGE).forward(request, response);
                 }
             }
         } catch (Exception e) {
@@ -157,7 +159,7 @@ public class LoginServlet extends HttpServlet {
             // 记住我
             Cookie user = new Cookie(LoginConstrant.COOKIE_KEY, userName + "-" + password + "-" + userType + "-" + "yes");
             /*设置Cookie的存活时间为7天  */
-            user.setMaxAge(1 * 60 * 60 * 24 * 7);
+            user.setMaxAge(LoginConstrant.COOKIE_TIME_OUT);
             response.addCookie(user);
         } else {
             // 删除客户端Cookie

@@ -11,15 +11,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.constrant.*;
 import com.dao.DormBuildDao;
 import com.dao.StudentDao;
 import com.model.DormManager;
 import com.model.Student;
+import com.service.StudentService;
 import com.util.DBUtils;
 import com.util.StringUtil;
 
 @WebServlet("/student")
-public class StudentServlet517 extends HttpServlet {
+public class StudentServlet extends HttpServlet {
 
     /**
      *
@@ -27,7 +29,9 @@ public class StudentServlet517 extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     DBUtils dbUtil = new DBUtils();
-    StudentDao studentDao = new StudentDao();
+    private StudentDao studentDao = new StudentDao();
+
+    private StudentService studentService = new StudentService();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -35,84 +39,100 @@ public class StudentServlet517 extends HttpServlet {
         this.doPost(request, response);
     }
 
+    // 选择的宿舍楼
+    public static final String BUILD_SELECT = "buildToSelect";
+
+    // 搜索关键字
+    public static final String SEARCH_KEY = "s_studentText";
+
+    // 搜索类型
+    public static final String SEARCH_TYPE = "searchType";
+
+
+    public static final String SEARCH_TYPE_NAME = "name";
+
+
+    public static final String SEARCH_TYPE_NUMBER = "number";
+
+    public static final String SEARCH_TYPE_DORM = "dorm";
+
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
+        String action = request.getParameter("action"); // 用户操作类型
+
         HttpSession session = request.getSession();
-        Object currentUserType = session.getAttribute("currentUserType");
-        String s_studentText = request.getParameter("s_studentText");
-        String dormBuildId = request.getParameter("buildToSelect");
-        String searchType = request.getParameter("searchType");
-        String action = request.getParameter("action");
-        Student student = new Student();
-        if ("preSave".equals(action)) {
+        String currentUserType = (String) session.getAttribute(LoginConstrant.CURRENT_USER_TYPE);
+
+        String searchKey = request.getParameter(SEARCH_KEY);
+        String dormBuildId = request.getParameter(BUILD_SELECT);
+        String searchType = request.getParameter(SEARCH_TYPE);
+
+        Student student = new Student(); // 构建搜索条件的实体
+        if (OptConstrant.PRE_SAVE.equals(action)) {
             studentPreSave(request, response);
             return;
-        } else if ("save".equals(action)) {
+        } else if (OptConstrant.SAVE.equals(action)) {
             studentSave(request, response);
             return;
-        } else if ("delete".equals(action)) {
+        } else if (OptConstrant.DELETE.equals(action)) {
+            String studentId = request.getParameter("studentId");
             studentDelete(request, response);
+//            studentService.deleteStudentById(con, studentId);
+            request.getRequestDispatcher("student?action=list").forward(request, response);
             return;
-        } else if ("list".equals(action)) {
-            if (StringUtil.isNotEmpty(s_studentText)) {
-                if ("name".equals(searchType)) {
-                    student.setName(s_studentText);
-                } else if ("number".equals(searchType)) {
-                    student.setStuNumber(s_studentText);
-                } else if ("dorm".equals(searchType)) {
-                    student.setDormName(s_studentText);
+        } else if (OptConstrant.LIST.equals(action)) {
+            // 构建搜索条件
+            if (StringUtil.isNotEmpty(searchKey)) {
+                switch (searchType) {
+                    case SEARCH_TYPE_NAME:
+                        student.setName(searchKey); // 学生姓名搜索的内容
+                        break;
+                    case SEARCH_TYPE_NUMBER:
+                        student.setStuNumber(searchKey); // 学生学号搜索的内容
+                        break;
+                    case SEARCH_TYPE_DORM:
+                        student.setDormName(searchKey); // 宿舍名称搜索的内容
+                        break;
                 }
+                session.setAttribute(SEARCH_KEY, searchKey);
+                session.setAttribute(SEARCH_TYPE, searchType);
+            } else {
+                session.removeAttribute(SEARCH_KEY);
+                session.removeAttribute(SEARCH_TYPE);
             }
             if (StringUtil.isNotEmpty(dormBuildId)) {
                 student.setDormBuildId(Integer.parseInt(dormBuildId));
-            }
-            session.removeAttribute("s_studentText");
-            session.removeAttribute("searchType");
-            session.removeAttribute("buildToSelect");
-            request.setAttribute("s_studentText", s_studentText);
-            request.setAttribute("searchType", searchType);
-            request.setAttribute("buildToSelect", dormBuildId);
-        } else if ("search".equals(action)) {
-            if (StringUtil.isNotEmpty(s_studentText)) {
-                if ("name".equals(searchType)) {
-                    student.setName(s_studentText);
-                } else if ("number".equals(searchType)) {
-                    student.setStuNumber(s_studentText);
-                } else if ("dorm".equals(searchType)) {
-                    student.setDormName(s_studentText);
-                }
-                session.setAttribute("s_studentText", s_studentText);
-                session.setAttribute("searchType", searchType);
+                session.setAttribute(BUILD_SELECT, dormBuildId);
             } else {
-                session.removeAttribute("s_studentText");
-                session.removeAttribute("searchType");
+                session.removeAttribute(BUILD_SELECT);
             }
-            if (StringUtil.isNotEmpty(dormBuildId)) {
-                student.setDormBuildId(Integer.parseInt(dormBuildId));
-                session.setAttribute("buildToSelect", dormBuildId);
-            } else {
-                session.removeAttribute("buildToSelect");
-            }
+            session.removeAttribute(SEARCH_KEY);
+            session.removeAttribute(SEARCH_TYPE);
+            session.removeAttribute(BUILD_SELECT);
+            request.setAttribute(SEARCH_KEY, searchKey);
+            request.setAttribute(SEARCH_TYPE, searchType);
+            request.setAttribute(BUILD_SELECT, dormBuildId);
         } else {
-            if ("admin".equals((String) currentUserType)) {
-                if (StringUtil.isNotEmpty(s_studentText)) {
+            if (UserType.ADMIN.equals((String) currentUserType)) {
+                if (StringUtil.isNotEmpty(searchKey)) {
                     if ("name".equals(searchType)) {
-                        student.setName(s_studentText);
+                        student.setName(searchKey);
                     } else if ("number".equals(searchType)) {
-                        student.setStuNumber(s_studentText);
+                        student.setStuNumber(searchKey);
                     } else if ("dorm".equals(searchType)) {
-                        student.setDormName(s_studentText);
+                        student.setDormName(searchKey);
                     }
-                    session.setAttribute("s_studentText", s_studentText);
+                    session.setAttribute("s_studentText", searchKey);
                     session.setAttribute("searchType", searchType);
                 }
                 if (StringUtil.isNotEmpty(dormBuildId)) {
                     student.setDormBuildId(Integer.parseInt(dormBuildId));
                     session.setAttribute("buildToSelect", dormBuildId);
                 }
-                if (StringUtil.isEmpty(s_studentText) && StringUtil.isEmpty(dormBuildId)) {
+                if (StringUtil.isEmpty(searchKey) && StringUtil.isEmpty(dormBuildId)) {
                     Object o1 = session.getAttribute("s_studentText");
                     Object o2 = session.getAttribute("searchType");
                     Object o3 = session.getAttribute("buildToSelect");
@@ -129,19 +149,19 @@ public class StudentServlet517 extends HttpServlet {
                         student.setDormBuildId(Integer.parseInt((String) o3));
                     }
                 }
-            } else if ("dormManager".equals((String) currentUserType)) {
-                if (StringUtil.isNotEmpty(s_studentText)) {
+            } else if (UserType.DORM_MANAGER.equals((String) currentUserType)) {
+                if (StringUtil.isNotEmpty(searchKey)) {
                     if ("name".equals(searchType)) {
-                        student.setName(s_studentText);
+                        student.setName(searchKey);
                     } else if ("number".equals(searchType)) {
-                        student.setStuNumber(s_studentText);
+                        student.setStuNumber(searchKey);
                     } else if ("dorm".equals(searchType)) {
-                        student.setDormName(s_studentText);
+                        student.setDormName(searchKey);
                     }
-                    session.setAttribute("s_studentText", s_studentText);
+                    session.setAttribute("s_studentText", searchKey);
                     session.setAttribute("searchType", searchType);
                 }
-                if (StringUtil.isEmpty(s_studentText)) {
+                if (StringUtil.isEmpty(searchKey)) {
                     Object o1 = session.getAttribute("s_studentText");
                     Object o2 = session.getAttribute("searchType");
                     if (o1 != null) {
@@ -156,23 +176,26 @@ public class StudentServlet517 extends HttpServlet {
                 }
             }
         }
+
+        // 上面的操作完成之后，重新展示最新数据
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            if ("admin".equals((String) currentUserType)) {
+            if (UserType.ADMIN.equals((String) currentUserType)) {
                 List<Student> studentList = studentDao.studentList(con, student);
-                request.setAttribute("dormBuildList", studentDao.dormBuildList(con));
-                request.setAttribute("student517List", studentList);
-                request.setAttribute("mainPage", "admin/student517.jsp");
+                request.setAttribute(PageMeta.DORM_BUILD_LIST, studentDao.dormBuildList(con));
+                request.setAttribute(PageMeta.STUDENT_LIST, studentList);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "admin/student517.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-            } else if ("dormManager".equals((String) currentUserType)) {
+            } else if (UserType.DORM_MANAGER.equals((String) currentUserType)) {
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
                 String buildName = DormBuildDao.dormBuildName(con, buildId);
                 List<Student> studentList = studentDao.studentListWithBuild(con, student, buildId);
-                request.setAttribute("dormBuildName", buildName);
-                request.setAttribute("student517List", studentList);
-                request.setAttribute("mainPage", "dormManager/student517.jsp");
+                // 宿管人员只能查看自己所管辖的宿舍楼的学生
+                request.setAttribute(PageMeta.DORM_BUILD_NAME, buildName);
+                request.setAttribute(PageMeta.STUDENT_LIST, studentList);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "dormManager/student517.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             }
         } catch (Exception e) {
@@ -188,21 +211,7 @@ public class StudentServlet517 extends HttpServlet {
 
     private void studentDelete(HttpServletRequest request,
                                HttpServletResponse response) {
-        String studentId = request.getParameter("studentId");
-        Connection con = null;
-        try {
-            con = dbUtil.getCon();
-            studentDao.studentDelete(con, studentId);
-            request.getRequestDispatcher("student?action=list").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                dbUtil.closeCon(con);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+
     }
 
     private void studentSave(HttpServletRequest request,

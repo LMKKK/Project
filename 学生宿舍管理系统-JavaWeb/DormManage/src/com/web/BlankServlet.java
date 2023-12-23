@@ -1,5 +1,9 @@
 package com.web;
 
+import com.constrant.LoginConstrant;
+import com.constrant.PageConstrant;
+import com.constrant.UserType;
+
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -28,16 +32,16 @@ public class BlankServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        Object currentUserType = session.getAttribute("currentUserType");
-        if ("admin".equals((String) currentUserType)) {
-            request.setAttribute("mainPage", "admin/blank.jsp");
-            request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-        } else if ("dormManager".equals((String) currentUserType)) {
-            request.setAttribute("mainPage", "dormManager/blank.jsp");
-            request.getRequestDispatcher("mainManager.jsp").forward(request, response);
-        } else if ("student".equals((String) currentUserType)) {
-            request.setAttribute("mainPage", "student/blank.jsp");
-            request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
+        Object currentUserType = session.getAttribute(LoginConstrant.CURRENT_USER_TYPE);
+        if (UserType.ADMIN.equals((String) currentUserType)) {
+            request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.ADMIN_BLANK_PAGE);
+            request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
+        } else if (UserType.DORM_MANAGER.equals((String) currentUserType)) {
+            request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.MANAGER_BLANK_PAGE);
+            request.getRequestDispatcher(PageConstrant.MANAGER_MAIN_PAGE).forward(request, response);
+        } else if (UserType.STUDENT.equals((String) currentUserType)) {
+            request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.STUDENT_BLANK_PAGE);
+            request.getRequestDispatcher(PageConstrant.STUDENT_MAIN_PAGE).forward(request, response);
         }
     }
 
