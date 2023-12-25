@@ -46,7 +46,7 @@
                 &nbsp;<button class="btn btn-primary" type="button" onclick="javascript:history.back()">返回</button>
             </div>
             <div align="center">
-                <font id="error" color="red">${error }</font>
+                <font id="error" color="red">${ error }</font>
             </div>
         </div>
     </form>

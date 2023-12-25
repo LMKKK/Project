@@ -82,6 +82,7 @@ public class LoginServlet extends HttpServlet {
                 currentAdmin = loginService.adminLogin(con, admin);
                 if (currentAdmin == null) {
                     /*登录失败，重定向到登录页面*/
+                    admin.setPassword(password); // 为了保证密码框中的密码不被清空，将密码重新设置到admin对象中
                     request.setAttribute("user", admin);
                     request.setAttribute("error", loginErrMsg);
                     System.out.println("[info]----管理员密码错误!");
@@ -101,6 +102,7 @@ public class LoginServlet extends HttpServlet {
                 DormManager dormManager = new DormManager(userName, password);
                 currentDormManager = loginService.managerLogin(con, dormManager);
                 if (currentDormManager == null) {
+                    dormManager.setPassword(password);
                     request.setAttribute("user", dormManager);
                     request.setAttribute("error", loginErrMsg);
                     System.out.println("[info]----宿管人员密码错误！");
@@ -118,6 +120,7 @@ public class LoginServlet extends HttpServlet {
                 Student student = new Student(userName, password);
                 currentStudent = userDao.Login(con, student);
                 if (currentStudent == null) {
+                    student.setPassword(password);
                     request.setAttribute("user", student);
                     request.setAttribute("error", "用户名或密码错误！");
                     System.out.println("[info]----学生登录失败");

@@ -5,7 +5,7 @@
 <script type="text/javascript">
     function dormManagerMove(dormManagerId, dormBuildId) {
         if (confirm("您确定要移除这个宿管吗？")) {
-            window.location = "dormBuild?action=move&dormBuildId=" + dormBuildId + "&dormManagerId=" + dormManagerId;
+            window.location = "dormBuild?action=moveManager&dormBuildId=" + dormBuildId + "&dormManagerId=" + dormManagerId;
         }
     }
 
@@ -41,15 +41,15 @@
                 <th>用户名</th>
                 <th>操作</th>
             </tr>
-            <c:forEach varStatus="i" var="managerWithId" items="${managerListWithId }">
+            <c:forEach varStatus="i" var="manager" items="${ managerListWithBuild }">
                 <tr>
-                    <td>${managerWithId.name }</td>
-                    <td>${managerWithId.sex }</td>
-                    <td>${managerWithId.tel }</td>
-                    <td>${managerWithId.userName }</td>
+                    <td>${manager.name }</td>
+                    <td>${manager.sex }</td>
+                    <td>${manager.tel }</td>
+                    <td>${manager.userName }</td>
                     <td>
                         <button class="btn btn-mini btn-danger" type="button"
-                                onclick="dormManagerMove(${managerWithId.dormManagerId},${managerWithId.dormBuildId})">
+                                onclick="dormManagerMove(${manager.dormManagerId},${manager.dormBuildId})">
                             移除
                         </button>
                     </td>

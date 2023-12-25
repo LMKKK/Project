@@ -165,42 +165,48 @@ public class DormManagerServlet extends HttpServlet {
         }
 
         String errMsg = null; // 页面的错误信息
+        boolean flag = true; // 标志错误信息
+        if (flag && (StringUtil.isEmpty(userName) || StringUtil.isEmpty(name))) {
+            errMsg = "用户名或姓名不可以为空";
+            flag = false;
+        }
+
 
         Connection con = null;
         try {
             con = dbUtil.getCon();
             int saveNum = 0;
-            if (StringUtil.isNotEmpty(dormManagerId)) {
+            if (flag && StringUtil.isNotEmpty(dormManagerId)) {
                 // dormMangerId不为空，则是修改信息
                 saveNum = dormManagerDao.dormManagerUpdate(con, dormManager);
             } else {
                 // dormMangerID为空,则是新增
                 // 检查用户名是否已存在
-                if (dormManagerDao.haveManagerByUser(con, dormManager.getUserName())) {
+                if (flag && dormManagerDao.haveManagerByUser(con, dormManager.getUserName())) {
                     errMsg = "用户名不可重复，请重新输入";
-                    request.setAttribute(PageMeta.DORM_MANAGER, dormManager);
-                    request.setAttribute("error", errMsg);
-                    request.setAttribute("mainPage", "admin/dormManagerSave.jsp");
-                    request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-                    try {
-                        dbUtil.closeCon(con);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    flag = false;
+                }
+
+                if (flag && StringUtil.isEmpty(errMsg)) {
+                    saveNum = dormManagerDao.dormManagerAdd(con, dormManager);
+                    if (saveNum <= 0) {
+                        errMsg = "保存失败！请重新检查录入的信息";
+                        flag = false;
                     }
                 }
-                saveNum = dormManagerDao.dormManagerAdd(con, dormManager);
             }
 
-
-
-            if (saveNum > 0) {
-                request.getRequestDispatcher("dormManager?action=list").forward(request, response);
+            if (!flag || StringUtil.isNotEmpty(errMsg) || saveNum <= 0) {
+                // 发生了错误，重新填写
+                request.setAttribute(PageMeta.DORM_MANAGER, dormManager);
+                request.setAttribute("error", errMsg);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "admin/dormManagerSave.jsp");
+                request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
             } else {
-                request.setAttribute("dormManager", dormManager);
-                request.setAttribute("error", "保存失败");
-                request.setAttribute("mainPage", "dormManager/dormManagerSave.jsp");
-                request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+                // 新增成功，跳转到列表页
+                request.getRequestDispatcher("dormManager?action=list").forward(request, response);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -217,6 +223,7 @@ public class DormManagerServlet extends HttpServlet {
         String dormManagerId = request.getParameter("dormManagerId");
         if (StringUtil.isNotEmpty(dormManagerId)) {
             // dormMangeId 不为空，则是修改
+            // 需要填充信息
             Connection con = null;
             try {
                 con = dbUtil.getCon();

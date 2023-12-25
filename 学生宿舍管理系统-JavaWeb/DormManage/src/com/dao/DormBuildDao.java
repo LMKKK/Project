@@ -95,7 +95,6 @@ public class DormBuildDao {
 	
 	public boolean existManOrDormWithId(Connection con, String dormBuildId)throws Exception {
 		boolean isExist = false;
-//		String sql="select * from t_dormBuild,t_dormManager,t_connection where dormManId=managerId and dormBuildId=buildId and dormBuildId=?";
 		String sql = "select *from t_dormManager where dormBuildId=?";
 		PreparedStatement pstmt=con.prepareStatement(sql);
 		pstmt.setString(1, dormBuildId);
@@ -159,5 +158,18 @@ public class DormBuildDao {
 		pstmt.setString(1, dormBuildId);
 		pstmt.setString(2, dormManagerId);
 		return pstmt.executeUpdate();
+	}
+
+	// 根据宿舍楼名称检索，是否已存在这个名称
+	public boolean isExistBuildWithName(Connection con, String dormBuildName)throws Exception {
+		boolean isExist = false;
+		String sql = "select * from t_dormBuild where dormBuildName=?";
+		PreparedStatement pstmt=con.prepareStatement(sql);
+		pstmt.setString(1, dormBuildName);
+		ResultSet rs = pstmt.executeQuery();
+		if(rs.next()) {
+			isExist = true;
+		}
+		return isExist;
 	}
 }

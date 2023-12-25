@@ -19,5 +19,8 @@ public class OptConstrant {
 
     public static final String SEARCH = "search";
 
+    public static final String ASSIGN_Manager = "assignManager";
+
+    public static final String MOVE_Manager = "moveManager";
 
 }

@@ -11,9 +11,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.constrant.OptConstrant;
+import com.constrant.PageConstrant;
+import com.constrant.PageMeta;
 import com.dao.DormBuildDao;
+import com.mchange.v2.codegen.bean.PropsToStringGeneratorExtension;
 import com.model.DormBuild;
 import com.model.DormManager;
+import com.sun.corba.se.impl.resolver.SplitLocalResolverImpl;
 import com.util.DBUtils;
 import com.util.StringUtil;
 
@@ -28,6 +33,12 @@ public class DormBuildServlet extends HttpServlet {
     DBUtils dbUtil = new DBUtils();
     DormBuildDao dormBuildDao = new DormBuildDao();
 
+    public static final String ACTION = "action";
+
+    public static final String ADMIN_DORM_BUILD = "admin/DormBuild.jsp";
+
+    public static final String DORM_BUILD_SEARCH_NAME = "searchBuildName";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -39,64 +50,65 @@ public class DormBuildServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
-        String s_dormBuildName = request.getParameter("s_dormBuildName");
+        String searchBuildName = request.getParameter(DORM_BUILD_SEARCH_NAME);
         String page = request.getParameter("page");
         String action = request.getParameter("action");
         DormBuild dormBuild = new DormBuild();
-        if ("preSave".equals(action)) {
+        if (OptConstrant.PRE_SAVE.equals(action)) {
             dormBuildPreSave(request, response);
             return;
-        } else if ("save".equals(action)) {
+        } else if (OptConstrant.SAVE.equals(action)) {
             dormBuildSave(request, response);
             return;
-        } else if ("delete".equals(action)) {
+        } else if (OptConstrant.DELETE.equals(action)) {
             dormBuildDelete(request, response);
             return;
-        } else if ("manager".equals(action)) {
+        } else if (OptConstrant.ASSIGN_Manager.equals(action)) {
+            // 跳转到分配宿舍管理员
             dormBuildManager(request, response);
             return;
         } else if ("addManager".equals(action)) {
+            // 添加宿舍管理员
             dormBuildAddManager(request, response);
-        } else if ("move".equals(action)) {
+        } else if (OptConstrant.MOVE_Manager.equals(action)) {
             managerMove(request, response);
-        } else if ("list".equals(action)) {
-            if (StringUtil.isNotEmpty(s_dormBuildName)) {
-                dormBuild.setDormBuildName(s_dormBuildName);
-            }
-            session.removeAttribute("s_dormBuildName");
-            request.setAttribute("s_dormBuildName", s_dormBuildName);
-        } else if ("search".equals(action)) {
-            if (StringUtil.isNotEmpty(s_dormBuildName)) {
-                dormBuild.setDormBuildName(s_dormBuildName);
-                session.setAttribute("s_dormBuildName", s_dormBuildName);
+        } else if (OptConstrant.LIST.equals(action)) {
+            if (StringUtil.isNotEmpty(searchBuildName)) {
+                dormBuild.setDormBuildName(searchBuildName);
+                session.setAttribute(DORM_BUILD_SEARCH_NAME, searchBuildName);
             } else {
-                session.removeAttribute("s_dormBuildName");
+                session.removeAttribute(DORM_BUILD_SEARCH_NAME);
             }
+            request.setAttribute(DORM_BUILD_SEARCH_NAME, searchBuildName);
         } else {
-            if (StringUtil.isNotEmpty(s_dormBuildName)) {
-                dormBuild.setDormBuildName(s_dormBuildName);
-                session.setAttribute("s_dormBuildName", s_dormBuildName);
-            }
-            if (StringUtil.isEmpty(s_dormBuildName)) {
-                Object o = session.getAttribute("s_dormBuildName");
-                if (o != null) {
-                    dormBuild.setDormBuildName((String) o);
+            // 防止action参数为空时，系统崩溃白页
+            // 补充参数
+            if (StringUtil.isNotEmpty(searchBuildName)) {
+                dormBuild.setDormBuildName(searchBuildName);
+                session.setAttribute(DORM_BUILD_SEARCH_NAME, searchBuildName);
+            } else {
+                String historySearchBuildName = (String) session.getAttribute(DORM_BUILD_SEARCH_NAME);
+                if (StringUtil.isNotEmpty(historySearchBuildName)) {
+                    searchBuildName = historySearchBuildName;
+                    dormBuild.setDormBuildName(searchBuildName);
+                    request.setAttribute(DORM_BUILD_SEARCH_NAME, searchBuildName);
                 }
             }
         }
-        if (StringUtil.isEmpty(page)) {
-            page = "1";
-        }
+
+        // 刷新页面
+        flushPage(dormBuild, request, response);
+    }
+
+    private void flushPage(DormBuild dormBuild, HttpServletRequest request, HttpServletResponse response) {
         Connection con = null;
         try {
             con = dbUtil.getCon();
             List<DormBuild> dormBuildList = dormBuildDao.dormBuildList(con, dormBuild);
             int total = dormBuildDao.dormBuildCount(con, dormBuild);
-//            String pageCode = this.genPagation(total, Integer.parseInt(page), Integer.parseInt(PropertiesUtil.getValue("pageSize")));
-//            request.setAttribute("pageCode", pageCode);
-            request.setAttribute("dormBuild502List", dormBuildList);
-            request.setAttribute("mainPage", "admin/dormBuild.jsp");
-            request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+            request.setAttribute(PageMeta.DORM_BUILD_LIST, dormBuildList);
+            request.setAttribute(PageConstrant.MAIN_PAGE, "admin/dormBuild.jsp");
+            request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -139,16 +151,21 @@ public class DormBuildServlet extends HttpServlet {
     private void dormBuildManager(HttpServletRequest request,
                                   HttpServletResponse response) {
         String dormBuildId = request.getParameter("dormBuildId");
+        // ！！！注意：一栋宿舍楼可以有多个宿舍管理员，但是一个宿舍管理员只能 管理一个宿舍楼
+        // 1. 获取这栋楼中的宿舍管理员
+        // 2. 查找未分配的宿舍管理员
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            List<DormManager> managerListWithId = dormBuildDao.dormManWithBuildId(con, dormBuildId);
+            // managerListWithBuild 这栋楼中的所有宿舍管理员
+            List<DormManager> managerListWithBuild = dormBuildDao.dormManWithBuildId(con, dormBuildId);
+            // managerListToSelect 未分配的宿舍管理员
             List<DormManager> managerListToSelect = dormBuildDao.dormManWithoutBuild(con);
             request.setAttribute("dormBuildId", dormBuildId);
-            request.setAttribute("managerListWithId", managerListWithId);
-            request.setAttribute("managerListToSelect", managerListToSelect);
-            request.setAttribute("mainPage", "admin/selectManager.jsp");
-            request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+            request.setAttribute(PageMeta.DORM_MANAGER_WITH_BUILD, managerListWithBuild);
+            request.setAttribute(PageMeta.DORM_MANAGER_TO_SELECT, managerListToSelect);
+            request.setAttribute(PageConstrant.MAIN_PAGE, "admin/selectManager.jsp");
+            request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -187,22 +204,54 @@ public class DormBuildServlet extends HttpServlet {
             dormBuild.setDormBuildId(Integer.parseInt(dormBuildId));
         }
         Connection con = null;
+
         try {
             con = dbUtil.getCon();
+            String errMsg = null;
+            boolean flag = true;
             int saveNum = 0;
             if (StringUtil.isNotEmpty(dormBuildId)) {
+                // dormBuildId不为空，是修改
                 saveNum = dormBuildDao.dormBuildUpdate(con, dormBuild);
+                if (saveNum <= 0) {
+                    errMsg = "修改失败";
+                    flag = false;
+                }
             } else {
-                saveNum = dormBuildDao.dormBuildAdd(con, dormBuild);
+                // dormBuildId为空，是新增
+
+                if (StringUtil.isEmpty(dormBuildName)) {
+                    errMsg = "宿舍楼名称不能为空";
+                    flag = false;
+                }
+
+                // 需要考虑这个 公寓名称是否已经有了
+                if (flag && dormBuildDao.isExistBuildWithName(con, dormBuildName)) {
+                    // 已存在同名的宿舍楼
+                    errMsg = "已存在同名的宿舍楼, 请换个名称吧！";
+                    flag = false;
+                }
+                if (flag && StringUtil.isEmpty(errMsg)) {
+                    // 检验完成，可以新增了
+                    saveNum = dormBuildDao.dormBuildAdd(con, dormBuild);
+                    if (saveNum <= 0) {
+                        errMsg = "保存失败";
+                        flag = false;
+                    }
+                }
             }
-            if (saveNum > 0) {
+
+            if (flag && StringUtil.isEmpty(errMsg)) {
+                // 操作成功，跳回到列表页
                 request.getRequestDispatcher("dormBuild?action=list").forward(request, response);
+                return;
             } else {
                 request.setAttribute("dormBuild", dormBuild);
-                request.setAttribute("error", "保存失败");
-                request.setAttribute("mainPage", "dormBuild/dormBuildSave.jsp");
-                request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+                request.setAttribute("error", errMsg);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "dormBuild/dormBuildSave.jsp");
+                request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -218,11 +267,12 @@ public class DormBuildServlet extends HttpServlet {
                                   HttpServletResponse response) throws ServletException, IOException {
         String dormBuildId = request.getParameter("dormBuildId");
         if (StringUtil.isNotEmpty(dormBuildId)) {
+            // 不为空，则是修改，需要填充数据
             Connection con = null;
             try {
                 con = dbUtil.getCon();
                 DormBuild dormBuild = dormBuildDao.dormBuildShow(con, dormBuildId);
-                request.setAttribute("dormBuild502", dormBuild);
+                request.setAttribute("dormBuild", dormBuild);
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
@@ -234,8 +284,8 @@ public class DormBuildServlet extends HttpServlet {
             }
         }
 
-        request.setAttribute("mainPage", "admin/dormBuildSave.jsp");
-        request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
+        request.setAttribute(PageConstrant.MAIN_PAGE, "admin/dormBuildSave.jsp");
+        request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
     }
 
 
