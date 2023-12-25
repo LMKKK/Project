@@ -16,7 +16,8 @@ public class LogoutServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 清空Cookie和Session
+        // 退出登录
+        // 只需要清空Cookie和Session
         HttpSession session = request.getSession();
         session.removeAttribute("currentUser");
 
@@ -30,7 +31,7 @@ public class LogoutServlet extends HttpServlet {
             }
         }
 
-        // 跳转到登录页面
+        // 重新登陆，跳转到登录页面
         response.sendRedirect("login.jsp");
 
     }
