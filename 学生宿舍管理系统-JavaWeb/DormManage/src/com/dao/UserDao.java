@@ -105,7 +105,7 @@ public class UserDao {
     public int managerUpdate(Connection con, int managerId, String password) throws Exception {
         // 验证数据库连接是否可用，不可用不会去执行下面的操作。
         DBUtils.isValidCon(con);
-        String sql = "update t_dormmanager set password=? where dormManId=?";
+        String sql = "update t_dormManager set password=? where dormManId=?";
         password = MD5Util.encoderPwdByMD5(password);
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, password);

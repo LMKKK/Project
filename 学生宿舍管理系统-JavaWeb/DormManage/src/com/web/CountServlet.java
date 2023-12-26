@@ -183,7 +183,7 @@ public class CountServlet extends HttpServlet {
             count.setDate(sysDatetime);
             count.setDormBuildId(buildId);
             count.setDormBuildName(buildName);
-            request.setAttribute("count509", count);
+            request.setAttribute("count", count);
 //            request.setAttribute("date", sysDatetime);
 //            request.setAttribute("",buildName);
 

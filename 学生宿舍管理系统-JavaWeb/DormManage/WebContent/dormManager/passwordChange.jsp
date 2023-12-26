@@ -6,6 +6,7 @@
         var oldPassword = document.getElementById("oldPassword").value;
         var newPassword = document.getElementById("newPassword").value;
         var rPassword = document.getElementById("rPassword").value;
+        console.log('')
         if (oldPassword == "" || newPassword == "" || rPassword == "") {
             document.getElementById("error").innerHTML = "信息填写不完整！";
             return false;

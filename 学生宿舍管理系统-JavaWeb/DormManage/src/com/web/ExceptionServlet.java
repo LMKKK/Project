@@ -1,5 +1,7 @@
 package com.web;
 
+import com.constrant.OptConstrant;
+import com.constrant.PageConstrant;
 import com.constrant.UserType;
 import com.dao.DormBuildDao;
 import com.dao.ExceptionDao;
@@ -52,10 +54,10 @@ public class ExceptionServlet extends HttpServlet {
         String endDate = request.getParameter("endDate");
 
         Excp record = new Excp();
-        if ("preSave".equals(action)) {
+        if (OptConstrant.PRE_SAVE.equals(action)) {
             recordPreSave(request, response);
             return;
-        } else if ("save".equals(action)) {
+        } else if (OptConstrant.SAVE.equals(action)) {
             upload(request, response);
             Student student = (Student) (session.getAttribute("currentUser"));
             List<Excp> recordList = null;
@@ -68,10 +70,10 @@ public class ExceptionServlet extends HttpServlet {
             request.setAttribute("mainPage", "student/exception.jsp");
             request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             return;
-        } else if ("update".equals(action)) {
+        } else if (OptConstrant.UPDATE.equals(action)) {
             update(request, response);
             return;
-        } else if ("show".equals(action)) {
+        } else if (OptConstrant.SHOW.equals(action)) {
             String excpId = request.getParameter("excpId");
             String stuNum = request.getParameter("stuNum");
             Connection con = null;
@@ -91,30 +93,26 @@ public class ExceptionServlet extends HttpServlet {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            String userPage = "";
+            String mainPage = "";
 
             if (UserType.ADMIN.equals(currentUserType)) {
-
-                request.setAttribute("mainPage", "admin/exceptionSave.jsp");
-                request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-<<<<<<< HEAD
+                userPage = PageConstrant.ADMIN_MAIN_PAGE;
+                mainPage = "admin/exceptionSave.jsp";
             } else if (UserType.DORM_MANAGER.equals(currentUserType)) {
-                request.setAttribute("mainPage", "dormManager/excpSave517.jsp");
-=======
-            } else if ("dormManager".equals((String) currentUserType)) {
-                request.setAttribute("mainPage", "dormManager/excpSave.jsp");
->>>>>>> 5a743df5e40267ea0343c3405a19ef0b961d98ac
-                request.getRequestDispatcher("mainManager.jsp").forward(request, response);
+                userPage = PageConstrant.MANAGER_MAIN_PAGE;
+                mainPage = "dormManager/excpSave.jsp";
             } else if (UserType.STUDENT.equals(currentUserType)) {
-                Student student = (Student) (session.getAttribute("currentUser"));
-                request.setAttribute("mainPage", "student/exceptionSave.jsp");
-                request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
+                userPage = PageConstrant.STUDENT_MAIN_PAGE;
+                mainPage = "student/exceptionSave.jsp";
             }
+            request.setAttribute(PageConstrant.MAIN_PAGE, mainPage);
+            request.getRequestDispatcher(userPage).forward(request, response);
             return;
-        } else if ("delete".equals(action)) {
+        } else if (OptConstrant.DELETE.equals(action)) {
             recordDelete(request, response);
             return;
-
-        } else if ("list".equals(action)) {
+        } else if (OptConstrant.LIST.equals(action)) {
             if (StringUtil.isNotEmpty(s_studentText)) {
                 if ("name".equals(searchType)) {
 //                    record.setStudentName(s_studentText);
@@ -243,6 +241,7 @@ public class ExceptionServlet extends HttpServlet {
 
     }
 
+    // 将图片上传到自身的这个服务器
     private void upload(HttpServletRequest request, HttpServletResponse response) {
 
         try {

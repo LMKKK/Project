@@ -13,7 +13,7 @@ public class OptConstrant {
 
     public static final String LIST = "list";
 
-
+    public static final String UPDATE = "update";
     public static final String SAVE = "save";
 
 
@@ -23,4 +23,5 @@ public class OptConstrant {
 
     public static final String MOVE_Manager = "moveManager";
 
+    public static final String SHOW = "show"; // 查看详情
 }
