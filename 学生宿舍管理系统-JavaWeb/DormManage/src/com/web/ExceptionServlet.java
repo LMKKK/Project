@@ -1,5 +1,6 @@
 package com.web;
 
+import com.constrant.UserType;
 import com.dao.DormBuildDao;
 import com.dao.ExceptionDao;
 import com.model.DormManager;
@@ -42,7 +43,7 @@ public class ExceptionServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
-        Object currentUserType = session.getAttribute("currentUserType");
+        String currentUserType = (String) session.getAttribute("currentUserType");
         String s_studentText = request.getParameter("s_studentText");
         String dormBuildId = request.getParameter("buildToSelect");
         String searchType = request.getParameter("searchType");
@@ -91,14 +92,14 @@ public class ExceptionServlet extends HttpServlet {
                 e.printStackTrace();
             }
 
-            if ("admin".equals((String) currentUserType)) {
+            if (UserType.ADMIN.equals(currentUserType)) {
 
                 request.setAttribute("mainPage", "admin/exceptionSave.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-            } else if ("dormManager".equals((String) currentUserType)) {
+            } else if (UserType.DORM_MANAGER.equals(currentUserType)) {
                 request.setAttribute("mainPage", "dormManager/excpSave517.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
-            } else if ("student".equals((String) currentUserType)) {
+            } else if (UserType.STUDENT.equals(currentUserType)) {
                 Student student = (Student) (session.getAttribute("currentUser"));
                 request.setAttribute("mainPage", "student/exceptionSave.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
@@ -165,13 +166,13 @@ public class ExceptionServlet extends HttpServlet {
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            if ("admin".equals((String) currentUserType)) {
+            if (UserType.ADMIN.equals((String) currentUserType)) {
                 List<Excp> recordList = recordDao.recordList(con, record);
                 request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
                 request.setAttribute("exceptionList", recordList);
                 request.setAttribute("mainPage", "admin/excp.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-            } else if ("dormManager".equals((String) currentUserType)) {
+            } else if (UserType.DORM_MANAGER.equals((String) currentUserType)) {
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
                 String buildName = DormBuildDao.dormBuildName(con, buildId);
@@ -180,7 +181,7 @@ public class ExceptionServlet extends HttpServlet {
                 request.setAttribute("exceptionList", recordList);
                 request.setAttribute("mainPage", "dormManager/excp.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
-            } else if ("student".equals((String) currentUserType)) {
+            } else if (UserType.STUDENT.equals((String) currentUserType)) {
                 Student student = (Student) (session.getAttribute("currentUser"));
                 List<Excp> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
                 request.setAttribute("exceptionList", recordList);

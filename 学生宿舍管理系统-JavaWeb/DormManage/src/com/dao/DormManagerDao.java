@@ -105,7 +105,7 @@ public class DormManagerDao {
     }
 
     public boolean haveManagerByUser(Connection con, String userName) throws Exception {
-        String sql = "select * from t_dormmanager t1 where t1.userName=?";
+        String sql = "select * from t_dormManager t1 where t1.userName=?";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, userName);
         ResultSet rs = pstmt.executeQuery();

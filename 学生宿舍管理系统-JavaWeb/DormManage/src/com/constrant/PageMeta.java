@@ -19,4 +19,5 @@ public class PageMeta {
     public static final String DORM_MANAGER_WITH_BUILD = "managerListWithBuild";
 
     public static final String DORM_MANAGER_TO_SELECT = "managerListToSelect";
+    public static final String RECORD_LIST = "recordList";
 }

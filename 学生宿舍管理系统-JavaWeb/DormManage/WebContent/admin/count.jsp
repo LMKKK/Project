@@ -36,7 +36,7 @@
     <div class="data_list_title">
         出入记录
     </div>
-    <form name="myForm" class="form-search" method="post" action="count?action=search" style="padding-bottom: 0px">
+    <form name="myForm" class="form-search" method="post" action="count?action=list" style="padding-bottom: 0px">
         <div class="text-right" style="display: inline-block;width: 70%;float:right">
     <span class="input-group date form_date col-md-2 text-right" data-date="" data-date-format="yyyy-mm-dd"
           data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">

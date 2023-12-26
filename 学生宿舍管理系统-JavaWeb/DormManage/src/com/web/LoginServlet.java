@@ -85,6 +85,7 @@ public class LoginServlet extends HttpServlet {
                     admin.setPassword(password); // 为了保证密码框中的密码不被清空，将密码重新设置到admin对象中
                     request.setAttribute("user", admin);
                     request.setAttribute("error", loginErrMsg);
+                    request.setAttribute("userType", userType);
                     System.out.println("[info]----管理员密码错误!");
                     // 重新返回登录页面
                     request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
@@ -105,7 +106,9 @@ public class LoginServlet extends HttpServlet {
                     dormManager.setPassword(password);
                     request.setAttribute("user", dormManager);
                     request.setAttribute("error", loginErrMsg);
+                    request.setAttribute("userType", userType);
                     System.out.println("[info]----宿管人员密码错误！");
+
                     request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
                     rememberMe(remember, userName, password, userType, request, response);
@@ -123,6 +126,7 @@ public class LoginServlet extends HttpServlet {
                     student.setPassword(password);
                     request.setAttribute("user", student);
                     request.setAttribute("error", "用户名或密码错误！");
+                    request.setAttribute("userType", userType);
                     System.out.println("[info]----学生登录失败");
                     request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {

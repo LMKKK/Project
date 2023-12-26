@@ -1,5 +1,7 @@
 package com.web;
 
+import com.constrant.OptConstrant;
+import com.constrant.UserType;
 import com.dao.CountDao;
 import com.dao.DormBuildDao;
 import com.model.Count;
@@ -39,7 +41,7 @@ public class CountServlet extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         HttpSession session = request.getSession();
 
-        Object currentUserType = session.getAttribute("currentUserType");
+        String currentUserType = (String) session.getAttribute("currentUserType");
         String s_studentText = request.getParameter("s_studentText");
         String dormBuildId = request.getParameter("buildToSelect");
         String searchType = request.getParameter("searchType");
@@ -49,7 +51,7 @@ public class CountServlet extends HttpServlet {
 
 
         Count count = new Count();
-        if ("list".equals(action)) {
+        if (OptConstrant.LIST.equals(action)) {
             if (StringUtil.isNotEmpty(s_studentText)) {
                 if ("name".equals(searchType)) {
                     count.setStuName(s_studentText);
@@ -72,61 +74,26 @@ public class CountServlet extends HttpServlet {
             request.setAttribute("searchType", searchType);
             request.setAttribute("buildToSelect", dormBuildId);
 
-
-        } else if ("preSave".equals(action)) {
+        } else if (OptConstrant.PRE_SAVE.equals(action)) {
             countPreSave(request, response);
             return;
-        } else if ("save".equals(action)) {
+        } else if (OptConstrant.SAVE.equals(action)) {
             // 添加出入记录
             countSave(request, response);
             return;
-        } else if ("search".equals(action)) {
-            System.out.println("搜索");
-            if (StringUtil.isNotEmpty(s_studentText)) {
-                if ("name".equals(searchType)) {
-                    count.setStuName(s_studentText);
-                } else if ("number".equals(searchType)) {
-                    count.setStuNum(s_studentText);
-                } else if ("dorm".equals(searchType)) {
-                    count.setDormName(s_studentText);
-                }
-                session.setAttribute("s_studentText", s_studentText);
-                session.setAttribute("searchType", searchType);
-            } else {
-                session.removeAttribute("s_studentText");
-                session.removeAttribute("searchType");
-            }
-            if (StringUtil.isNotEmpty(startDate)) {
-                count.setStartDate(startDate);
-                session.setAttribute("startDate", startDate);
-            } else {
-                session.removeAttribute("startDate");
-            }
-            if (StringUtil.isNotEmpty(endDate)) {
-                count.setEndDate(endDate);
-                session.setAttribute("endDate", endDate);
-            } else {
-                session.removeAttribute("endDate");
-            }
-            if (StringUtil.isNotEmpty(dormBuildId)) {
-                count.setDormBuildId(Integer.parseInt(dormBuildId));
-                session.setAttribute("buildToSelect", dormBuildId);
-            } else {
-                session.removeAttribute("buildToSelect");
-            }
         }
 
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            if ("admin".equals((String) currentUserType)) {
+            if (UserType.ADMIN.equals(currentUserType)) {
                 List<Count> countList = countDao.countList(con, count);
                 System.out.println(countList);
                 request.setAttribute("dormBuildList", countDao.dormBuildList(con));
                 request.setAttribute("countList", countList);
                 request.setAttribute("mainPage", "admin/count.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-            } else if ("dormManager".equals((String) currentUserType)) {
+            } else if (UserType.DORM_MANAGER.equals(currentUserType)) {
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
                 String buildName = DormBuildDao.dormBuildName(con, buildId);

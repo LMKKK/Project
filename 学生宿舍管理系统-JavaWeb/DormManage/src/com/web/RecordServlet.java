@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.constrant.*;
 import com.dao.DormBuildDao;
 import com.dao.RecordDao;
 import com.dao.StudentDao;
@@ -30,6 +31,14 @@ public class RecordServlet extends HttpServlet {
     DBUtils dbUtil = new DBUtils();
     RecordDao recordDao = new RecordDao();
 
+    public static final String BUILD_TO_SELECT = "recorde_buildToSelect";
+    public static final String SEARCH_TYPE = "recordSearchType";
+    public static final String RECORD_SEARCH_TEXT = "recordSearchText";
+    public static final String ACTION = "action";
+
+    public static final String RECORD_START_DATE = "recordStartDate";
+    public static final String RECORD_END_DATE = "recordEndDate";
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -41,102 +50,79 @@ public class RecordServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
-        Object currentUserType = session.getAttribute("currentUserType");
-        String s_studentText = request.getParameter("s_studentText");
-        String dormBuildId = request.getParameter("buildToSelect");
-        String searchType = request.getParameter("searchType");
-        String action = request.getParameter("action");
-        String startDate = request.getParameter("startDate");
-        String endDate = request.getParameter("endDate");
+        String currentUserType = (String) session.getAttribute(LoginConstrant.CURRENT_USER_TYPE);
+        String searchText = request.getParameter(RECORD_SEARCH_TEXT);
+        String dormBuildId = request.getParameter(BUILD_TO_SELECT);
+        String searchType = request.getParameter(SEARCH_TYPE);
+        String action = request.getParameter(ACTION);
+        // TODO 按照日期区间 检索
+        String startDate = request.getParameter(RECORD_START_DATE);
+        String endDate = request.getParameter(RECORD_END_DATE);
 
         Record record = new Record();
-        if ("preSave".equals(action)) {
+        if (OptConstrant.PRE_SAVE.equals(action)) {
             recordPreSave(request, response);
             return;
-        } else if ("save".equals(action)) {
+        } else if (OptConstrant.SAVE.equals(action)) {
             recordSave(request, response);
             return;
-        } else if ("delete".equals(action)) {
+        } else if (OptConstrant.DELETE.equals(action)) {
             recordDelete(request, response);
             return;
-        } else if ("list".equals(action)) {
-            if (StringUtil.isNotEmpty(s_studentText)) {
+        } else if (OptConstrant.LIST.equals(action)) {
+            if (StringUtil.isNotEmpty(searchText)) {
                 if ("name".equals(searchType)) {
-                    record.setStudentName(s_studentText);
+                    record.setStudentName(searchText);
                 } else if ("number".equals(searchType)) {
-                    record.setStudentNumber(s_studentText);
+                    record.setStudentNumber(searchText);
                 } else if ("dorm".equals(searchType)) {
-                    record.setDormName(s_studentText);
+                    record.setDormName(searchText);
                 }
+                session.setAttribute(SEARCH_TYPE, searchType);
+                session.setAttribute(RECORD_SEARCH_TEXT, searchText);
+            } else {
+                session.removeAttribute(SEARCH_TYPE);
+                session.removeAttribute(SEARCH_TYPE);
             }
+
             if (StringUtil.isNotEmpty(dormBuildId)) {
                 record.setDormBuildId(Integer.parseInt(dormBuildId));
+                session.setAttribute(BUILD_TO_SELECT, dormBuildId);
+            } else {
+                session.removeAttribute(BUILD_TO_SELECT);
             }
-            session.removeAttribute("s_studentText");
-            session.removeAttribute("searchType");
-            session.removeAttribute("buildToSelect");
-            request.setAttribute("s_studentText", s_studentText);
+            request.setAttribute(RECORD_SEARCH_TEXT, searchText);
             request.setAttribute("searchType", searchType);
             request.setAttribute("buildToSelect", dormBuildId);
-        } else if ("search".equals(action)) {
-            if (StringUtil.isNotEmpty(s_studentText)) {
-                if ("name".equals(searchType)) {
-                    record.setStudentName(s_studentText);
-                } else if ("number".equals(searchType)) {
-                    record.setStudentNumber(s_studentText);
-                } else if ("dorm".equals(searchType)) {
-                    record.setDormName(s_studentText);
-                }
-                session.setAttribute("s_studentText", s_studentText);
-                session.setAttribute("searchType", searchType);
-            } else {
-                session.removeAttribute("s_studentText");
-                session.removeAttribute("searchType");
-            }
-            if (StringUtil.isNotEmpty(startDate)) {
-                record.setStartDate(startDate);
-                session.setAttribute("startDate", startDate);
-            } else {
-                session.removeAttribute("startDate");
-            }
-            if (StringUtil.isNotEmpty(endDate)) {
-                record.setEndDate(endDate);
-                session.setAttribute("endDate", endDate);
-            } else {
-                session.removeAttribute("endDate");
-            }
-            if (StringUtil.isNotEmpty(dormBuildId)) {
-                record.setDormBuildId(Integer.parseInt(dormBuildId));
-                session.setAttribute("buildToSelect", dormBuildId);
-            } else {
-                session.removeAttribute("buildToSelect");
-            }
         }
 
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            if ("admin".equals((String) currentUserType)) {
+            if (UserType.ADMIN.equals(currentUserType)) {
+                // 当前用户是系统管理员
                 List<Record> recordList = recordDao.recordList(con, record);
-                request.setAttribute("dormBuildList", recordDao.dormBuildList(con));
-                request.setAttribute("recordList", recordList);
-                request.setAttribute("mainPage", "admin/record.jsp");
-                request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
-            } else if ("dormManager".equals((String) currentUserType)) {
+                request.setAttribute(PageMeta.DORM_BUILD_LIST, recordDao.dormBuildList(con));
+                request.setAttribute(PageMeta.RECORD_LIST, recordList);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "admin/record.jsp");
+                request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
+            } else if (UserType.DORM_MANAGER.equals(currentUserType)) {
+                // 当前用户是宿舍管理员
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
                 String buildName = DormBuildDao.dormBuildName(con, buildId);
                 List<Record> recordList = recordDao.recordListWithBuild(con, record, buildId);
                 request.setAttribute("dormBuildName", buildName);
-                request.setAttribute("recordList", recordList);
-                request.setAttribute("mainPage", "dormManager/record.jsp");
-                request.getRequestDispatcher("mainManager.jsp").forward(request, response);
-            } else if ("student".equals((String) currentUserType)) {
+                request.setAttribute(PageMeta.RECORD_LIST, recordList);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "dormManager/record.jsp");
+                request.getRequestDispatcher(PageConstrant.MANAGER_MAIN_PAGE).forward(request, response);
+            } else if (UserType.STUDENT.equals(currentUserType)) {
+                // 当前用户是学生
                 Student student = (Student) (session.getAttribute("currentUser"));
                 List<Record> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
-                request.setAttribute("recordList", recordList);
-                request.setAttribute("mainPage", "student/record.jsp");
-                request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
+                request.setAttribute(PageMeta.RECORD_LIST, recordList);
+                request.setAttribute(PageConstrant.MAIN_PAGE, "student/record.jsp");
+                request.getRequestDispatcher(PageConstrant.STUDENT_MAIN_PAGE).forward(request, response);
             }
         } catch (Exception e) {
             e.printStackTrace();

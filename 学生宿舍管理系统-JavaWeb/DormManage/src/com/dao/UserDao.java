@@ -45,7 +45,7 @@ public class UserDao {
         DBUtils.isValidCon(con);
         DormManager resultDormManager = null;
         dormManager.setPassword(MD5Util.encoderPwdByMD5(dormManager.getPassword()));
-        String sql = "select * from t_dormmanager where userName=? and password=?";
+        String sql = "select * from t_dormManager where userName=? and password=?";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, dormManager.getUserName());
         pstmt.setString(2, dormManager.getPassword());
