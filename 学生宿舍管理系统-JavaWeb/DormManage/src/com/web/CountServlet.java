@@ -185,7 +185,7 @@ public class CountServlet extends HttpServlet {
             } else {
                 request.setAttribute("count", count);
                 request.setAttribute("error", "ÃÌº” ß∞‹");
-                request.setAttribute("mainPage", "dormManager/countSave509.jsp");
+                request.setAttribute("mainPage", "dormManager/countSave.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             }
         } catch (Exception e) {
@@ -229,7 +229,7 @@ public class CountServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        request.setAttribute("mainPage", "dormManager/countSave509.jsp");
+        request.setAttribute("mainPage", "dormManager/countSave.jsp");
         request.getRequestDispatcher("mainManager.jsp").forward(request, response);
     }
 

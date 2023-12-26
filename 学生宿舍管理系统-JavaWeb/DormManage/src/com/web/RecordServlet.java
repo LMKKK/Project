@@ -191,7 +191,7 @@ public class RecordServlet extends HttpServlet {
             if (student.getName() == null) {
                 request.setAttribute("record", record);
                 request.setAttribute("error", "????????????????????");
-                request.setAttribute("mainPage", "dormManager/recordSave509.jsp");
+                request.setAttribute("mainPage", "dormManager/recordSave.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else {
                 record.setDormBuildId(student.getDormBuildId());
@@ -207,7 +207,7 @@ public class RecordServlet extends HttpServlet {
                 } else {
                     request.setAttribute("record", record);
                     request.setAttribute("error", "???????");
-                    request.setAttribute("mainPage", "dormManager/recordSave509.jsp");
+                    request.setAttribute("mainPage", "dormManager/recordSave.jsp");
                     request.getRequestDispatcher("mainManager.jsp").forward(request, response);
                 }
             }
@@ -248,7 +248,7 @@ public class RecordServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        request.setAttribute("mainPage", "dormManager/recordSave509.jsp");
+        request.setAttribute("mainPage", "dormManager/recordSave.jsp");
         request.getRequestDispatcher("mainManager.jsp").forward(request, response);
     }
 }

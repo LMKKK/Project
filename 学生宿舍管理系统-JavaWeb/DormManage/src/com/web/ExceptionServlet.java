@@ -64,7 +64,7 @@ public class ExceptionServlet extends HttpServlet {
                 e.printStackTrace();
             }
             request.setAttribute("exceptionList", recordList);
-            request.setAttribute("mainPage", "student/exception517.jsp");
+            request.setAttribute("mainPage", "student/exception.jsp");
             request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             return;
         } else if ("update".equals(action)) {
@@ -96,7 +96,7 @@ public class ExceptionServlet extends HttpServlet {
                 request.setAttribute("mainPage", "admin/exceptionSave.jsp");
                 request.getRequestDispatcher("mainAdmin.jsp").forward(request, response);
             } else if ("dormManager".equals((String) currentUserType)) {
-                request.setAttribute("mainPage", "dormManager/excpSave517.jsp");
+                request.setAttribute("mainPage", "dormManager/excpSave.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             } else if ("student".equals((String) currentUserType)) {
                 Student student = (Student) (session.getAttribute("currentUser"));
@@ -184,7 +184,7 @@ public class ExceptionServlet extends HttpServlet {
                 Student student = (Student) (session.getAttribute("currentUser"));
                 List<Excp> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
                 request.setAttribute("exceptionList", recordList);
-                request.setAttribute("mainPage", "student/exception517.jsp");
+                request.setAttribute("mainPage", "student/exception.jsp");
                 request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
             }
         } catch (Exception e) {
@@ -400,7 +400,7 @@ public class ExceptionServlet extends HttpServlet {
                 e.printStackTrace();
             }
         }
-        request.setAttribute("mainPage", "student/upload517.jsp");
+        request.setAttribute("mainPage", "student/upload.jsp");
         request.getRequestDispatcher("mainStudent.jsp").forward(request, response);
     }
 
