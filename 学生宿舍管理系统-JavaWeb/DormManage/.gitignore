@@ -1,3 +1,7 @@
 .idea
 *.iml
+<<<<<<< HEAD
 /out
+=======
+.DS_Store
+>>>>>>> 5a743df5e40267ea0343c3405a19ef0b961d98ac
