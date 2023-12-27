@@ -53,14 +53,14 @@ public class PasswordServlet extends HttpServlet {
         HttpSession session = request.getSession();
         String currentUserType = (String) session.getAttribute("currentUserType");
         String oldPassword = request.getParameter("oldPassword");
-        // ÓÉÓÚMD5 ¼ÓÃÜÊÇ µ¥ÏòµÄ£¬ ËùÒÔÕâÀïĞèÒª½«ÓÃ»§ÊäÈëµÄÃÜÂë½øĞĞ¼ÓÃÜºóÔÙÓëÊı¾İ¿âÖĞµÄÃÜÂë½øĞĞ±È½Ï
-        String encoderPwdByMD5 = MD5Util.encoderPwdByMD5(oldPassword); // MD5¼ÓÃÜ
+        // ç”±äºMD5 åŠ å¯†æ˜¯ å•å‘çš„ï¼Œ æ‰€ä»¥è¿™é‡Œéœ€è¦å°†ç”¨æˆ·è¾“å…¥çš„å¯†ç è¿›è¡ŒåŠ å¯†åå†ä¸æ•°æ®åº“ä¸­çš„å¯†ç è¿›è¡Œæ¯”è¾ƒ
+        String encoderPwdByMD5 = MD5Util.encoderPwdByMD5(oldPassword); // MD5åŠ å¯†
         String newPassword = request.getParameter("newPassword");
         Connection con = null;
         String mainPage = "";
         String userPage = "";
-        String successMsg = "ĞŞ¸Ä³É¹¦";
-        String errorMsg = "Ô­ÃÜÂë´íÎó, ÇëÖØĞÂÊäÈë";
+        String successMsg = "ä¿®æ”¹æˆåŠŸ";
+        String errorMsg = "åŸå¯†ç é”™è¯¯, è¯·é‡æ–°è¾“å…¥";
         try {
             con = dbUtil.getCon();
             String msg = "";
@@ -102,7 +102,7 @@ public class PasswordServlet extends HttpServlet {
             request.setAttribute("rPassword", newPassword);
             request.setAttribute("error", msg);
             request.setAttribute(PageConstrant.MAIN_PAGE, mainPage);
-            // ĞŞ¸Ä³É¹¦£¬ÖØĞÂµÇÂ½, ÖØĞÂ»ñÈ¡ÓÃ»§ĞÅÏ¢
+            // ä¿®æ”¹æˆåŠŸï¼Œé‡æ–°ç™»é™†, é‡æ–°è·å–ç”¨æˆ·ä¿¡æ¯
             if (successMsg.equals(msg)) {
                 request.getRequestDispatcher("logout").forward(request, response);
                 return;
@@ -128,15 +128,15 @@ public class PasswordServlet extends HttpServlet {
         String mainPage = "";
         String userPage = "";
         if (UserType.ADMIN.equals(currentUserType)) {
-            // ¹ÜÀíÔ±
+            // ç®¡ç†å‘˜
             mainPage = "admin/passwordChange.jsp";
             userPage = PageConstrant.ADMIN_MAIN_PAGE;
         } else if (UserType.DORM_MANAGER.equals(currentUserType)) {
-            // ËŞÉá¹ÜÀíÔ±
+            // å®¿èˆç®¡ç†å‘˜
             mainPage = "dormManager/passwordChange.jsp";
             userPage = PageConstrant.MANAGER_MAIN_PAGE;
         } else if (UserType.STUDENT.equals(currentUserType)) {
-            // Ñ§Éú
+            // å­¦ç”Ÿ
             mainPage = "student/passwordChange.jsp";
             userPage = PageConstrant.STUDENT_MAIN_PAGE;
         }

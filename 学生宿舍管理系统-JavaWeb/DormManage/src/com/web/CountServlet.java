@@ -24,7 +24,7 @@ import java.util.List;
 
 @WebServlet("/count")
 public class CountServlet extends HttpServlet {
-    // ĞòÁĞ»¯°æ±¾ºÅ
+    // åºåˆ—åŒ–ç‰ˆæœ¬å·
     private static final long serialVersionUID = 1L;
     DBUtils dbUtil = new DBUtils();
     CountDao countDao = new CountDao();
@@ -78,7 +78,7 @@ public class CountServlet extends HttpServlet {
             countPreSave(request, response);
             return;
         } else if (OptConstrant.SAVE.equals(action)) {
-            // Ìí¼Ó³öÈë¼ÇÂ¼
+            // æ·»åŠ å‡ºå…¥è®°å½•
             countSave(request, response);
             return;
         }
@@ -125,9 +125,9 @@ public class CountServlet extends HttpServlet {
         String dormBuildName = request.getParameter("dormBuildName");
         String state = request.getParameter("state");
         if ("0".equals(state)) {
-            state = "³ö";
+            state = "å‡º";
         } else {
-            state = "Èë";
+            state = "å…¥";
         }
         String date = request.getParameter("date");
         String detail = request.getParameter("detail");
@@ -151,7 +151,7 @@ public class CountServlet extends HttpServlet {
                 request.getRequestDispatcher("count?action=list").forward(request, response);
             } else {
                 request.setAttribute("count", count);
-                request.setAttribute("error", "Ìí¼ÓÊ§°Ü");
+                request.setAttribute("error", "æ·»åŠ å¤±è´¥");
                 request.setAttribute("mainPage", "dormManager/countSave.jsp");
                 request.getRequestDispatcher("mainManager.jsp").forward(request, response);
             }

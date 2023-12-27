@@ -13,7 +13,7 @@ import java.util.List;
 
 public class ExceptionDao {
 
-    /*·µ»ØÖ¸¶¨Ìõ¼şµÄ²éÑ¯Òì³£±¨±¸¼ÇÂ¼*/
+    /*è¿”å›æŒ‡å®šæ¡ä»¶çš„æŸ¥è¯¢å¼‚å¸¸æŠ¥å¤‡è®°å½•*/
     public List<Excp> recordList(Connection con, Excp excp) throws Exception {
         List<Excp> excpList = new ArrayList<Excp>();
         StringBuffer sb = new StringBuffer("select * from t_exception t1");
@@ -51,7 +51,7 @@ public class ExceptionDao {
         return excpList;
     }
 
-    //    ¸ù¾İËŞÉáÂ¥ID·µ»Ø²éÑ¯½á¹û
+    //    æ ¹æ®å®¿èˆæ¥¼IDè¿”å›æŸ¥è¯¢ç»“æœ
     public List<Excp> recordListWithBuild(Connection con, Excp s_record, int buildId) throws Exception {
         List<Excp> recordList = new ArrayList<Excp>();
         StringBuffer sb = new StringBuffer("select * from t_exception t1");
@@ -84,7 +84,7 @@ public class ExceptionDao {
         return recordList;
     }
 
-    //    ¸ù¾İÑ§ºÅ·µ»Ø±¨±¸¼ÇÂ¼
+    //    æ ¹æ®å­¦å·è¿”å›æŠ¥å¤‡è®°å½•
     public List<Excp> recordListWithNumber(Connection con, Excp s_record, String studentNumber) throws Exception {
         List<Excp> recordList = new ArrayList<Excp>();
         StringBuffer sb = new StringBuffer("select * from t_exception t1");
@@ -116,7 +116,7 @@ public class ExceptionDao {
         return recordList;
     }
 
-    //    ·µ»ØËŞÉáÂ¥ĞÅÏ¢
+    //    è¿”å›å®¿èˆæ¥¼ä¿¡æ¯
     public List<DormBuild> dormBuildList(Connection con) throws Exception {
         List<DormBuild> dormBuildList = new ArrayList<DormBuild>();
         String sql = "select * from t_dormBuild";
@@ -156,7 +156,7 @@ public class ExceptionDao {
 
     public int recordAdd(Connection con, Excp record) throws Exception {
         String sql = "insert into `t_exception`(`stuNum`,`dormBuildId`,`tel`,`date`,`state`,`detail`,`imgUrl`) " +
-                "values(?,?,?,?,'´¦ÀíÖĞ',?,?);";
+                "values(?,?,?,?,'å¤„ç†ä¸­',?,?);";
         PreparedStatement pstmt = con.prepareStatement(sql);
         pstmt.setString(1, record.getStuNum());
         pstmt.setInt(2, record.getDormBuildId());

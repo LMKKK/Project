@@ -23,7 +23,7 @@ import com.util.DBUtils;
 import com.util.StringUtil;
 
 /**
- * ½éÉÜ£ºÊµÏÖÓÃ»§µÇÂ¼
+ * ä»‹ç»ï¼šå®ç°ç”¨æˆ·ç™»å½•
  */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -48,16 +48,16 @@ public class LoginServlet extends HttpServlet {
         String password = request.getParameter("password");
         String remember = request.getParameter("remember");
         String userType = request.getParameter("userType");
-        // Ç°¶ËÒÑ¾­ÏŞÖÆÁËÓÃ»§Ãû¡¢ÃÜÂë¡¢ÓÃ»§ÀàĞÍ ±ØÌî£¬ ´Ë´¦ÔÙ×öÒ»´Î²ÎÊı¹ıÂË
+        // å‰ç«¯å·²ç»é™åˆ¶äº†ç”¨æˆ·åã€å¯†ç ã€ç”¨æˆ·ç±»å‹ å¿…å¡«ï¼Œ æ­¤å¤„å†åšä¸€æ¬¡å‚æ•°è¿‡æ»¤
         String errMsg = null;
         if (StringUtil.isEmpty(userName)) {
-            errMsg = "ÓÃ»§Ãû²»ÄÜÎª¿Õ";
+            errMsg = "ç”¨æˆ·åä¸èƒ½ä¸ºç©º";
         }
         if (StringUtil.isEmpty(password)) {
-            errMsg = "ÃÜÂë²»ÄÜÎª¿Õ";
+            errMsg = "å¯†ç ä¸èƒ½ä¸ºç©º";
         }
         if (StringUtil.isEmpty(userType)) {
-            errMsg = "ÇëÑ¡ÔñÓÃ»§ÀàĞÍ";
+            errMsg = "è¯·é€‰æ‹©ç”¨æˆ·ç±»å‹";
         }
 
         if (StringUtil.isNotEmpty(errMsg)) {
@@ -67,39 +67,39 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // µ½´ËÎªÖ¹£¬²ÎÊı¹ıÂËÍê³É£¬¿ªÊ¼ÕæÕıµÄÒµÎñ²Ù×÷
+        // åˆ°æ­¤ä¸ºæ­¢ï¼Œå‚æ•°è¿‡æ»¤å®Œæˆï¼Œå¼€å§‹çœŸæ­£çš„ä¸šåŠ¡æ“ä½œ
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            /*      ÉùÃ÷Èı¸öÏµÍ³½ÇÉ«£¬È»ºó½ÓÏÂÀ´¸ù¾İÒ³Ãæ´«¹ıÀ´µÄuserTypeÊôĞÔÀ´new     */
+            /*      å£°æ˜ä¸‰ä¸ªç³»ç»Ÿè§’è‰²ï¼Œç„¶åæ¥ä¸‹æ¥æ ¹æ®é¡µé¢ä¼ è¿‡æ¥çš„userTypeå±æ€§æ¥new     */
             Admin currentAdmin = null;
             DormManager currentDormManager = null;
             Student currentStudent = null;
-            String loginErrMsg = "ÓÃ»§Ãû»òÃÜÂë´íÎó£¡"; // µÇÂ¼´íÎóĞÅÏ¢
-            // ÅĞ¶ÏÊÇ·ñÊÇÏµÍ³¹ÜÀíÔ±
+            String loginErrMsg = "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼"; // ç™»å½•é”™è¯¯ä¿¡æ¯
+            // åˆ¤æ–­æ˜¯å¦æ˜¯ç³»ç»Ÿç®¡ç†å‘˜
             if (UserType.ADMIN.equals(userType)) {
                 Admin admin = new Admin(userName, password);
                 currentAdmin = loginService.adminLogin(con, admin);
                 if (currentAdmin == null) {
-                    /*µÇÂ¼Ê§°Ü£¬ÖØ¶¨Ïòµ½µÇÂ¼Ò³Ãæ*/
-                    admin.setPassword(password); // ÎªÁË±£Ö¤ÃÜÂë¿òÖĞµÄÃÜÂë²»±»Çå¿Õ£¬½«ÃÜÂëÖØĞÂÉèÖÃµ½admin¶ÔÏóÖĞ
+                    /*ç™»å½•å¤±è´¥ï¼Œé‡å®šå‘åˆ°ç™»å½•é¡µé¢*/
+                    admin.setPassword(password); // ä¸ºäº†ä¿è¯å¯†ç æ¡†ä¸­çš„å¯†ç ä¸è¢«æ¸…ç©ºï¼Œå°†å¯†ç é‡æ–°è®¾ç½®åˆ°adminå¯¹è±¡ä¸­
                     request.setAttribute("user", admin);
                     request.setAttribute("error", loginErrMsg);
                     request.setAttribute("userType", userType);
-                    System.out.println("[info]----¹ÜÀíÔ±ÃÜÂë´íÎó!");
-                    // ÖØĞÂ·µ»ØµÇÂ¼Ò³Ãæ
+                    System.out.println("[info]----ç®¡ç†å‘˜å¯†ç é”™è¯¯!");
+                    // é‡æ–°è¿”å›ç™»å½•é¡µé¢
                     request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
                     rememberMe(remember, userName, password, userType, request, response);
                     session.setAttribute(LoginConstrant.CURRENT_USER_TYPE, UserType.ADMIN);
                     session.setAttribute(LoginConstrant.CURRENT_USER, currentAdmin);
                     request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.ADMIN_BLANK_PAGE);
-                    System.out.println("[info]----¹ÜÀíÔ±³É¹¦µÇÂ¼");
-                    // µÇÂ¼³É¹¦£¬×ª·¢µ½µ½¹ÜÀíÔ±Ò³Ãæ
+                    System.out.println("[info]----ç®¡ç†å‘˜æˆåŠŸç™»å½•");
+                    // ç™»å½•æˆåŠŸï¼Œè½¬å‘åˆ°åˆ°ç®¡ç†å‘˜é¡µé¢
                     request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
                 }
             } else if (UserType.DORM_MANAGER.equals(userType)) {
-//                ÅĞ¶ÏÊÇ·ñÊÇËŞÉá¹ÜÀíÔ±
+//                åˆ¤æ–­æ˜¯å¦æ˜¯å®¿èˆç®¡ç†å‘˜
                 DormManager dormManager = new DormManager(userName, password);
                 currentDormManager = loginService.managerLogin(con, dormManager);
                 if (currentDormManager == null) {
@@ -107,7 +107,7 @@ public class LoginServlet extends HttpServlet {
                     request.setAttribute("user", dormManager);
                     request.setAttribute("error", loginErrMsg);
                     request.setAttribute("userType", userType);
-                    System.out.println("[info]----ËŞ¹ÜÈËÔ±ÃÜÂë´íÎó£¡");
+                    System.out.println("[info]----å®¿ç®¡äººå‘˜å¯†ç é”™è¯¯ï¼");
 
                     request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
@@ -115,26 +115,26 @@ public class LoginServlet extends HttpServlet {
                     session.setAttribute(LoginConstrant.CURRENT_USER_TYPE, UserType.DORM_MANAGER);
                     session.setAttribute(LoginConstrant.CURRENT_USER, currentDormManager);
                     request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.MANAGER_BLANK_PAGE);
-                    System.out.println("[info]----ËŞ¹ÜÈËÔ±³É¹¦µÇÂ¼");
+                    System.out.println("[info]----å®¿ç®¡äººå‘˜æˆåŠŸç™»å½•");
                     request.getRequestDispatcher(PageConstrant.MANAGER_MAIN_PAGE).forward(request, response);
                 }
             } else if (UserType.STUDENT.equals(userType)) {
-//                ÅĞ¶ÏÊÇ·ñÊÇÑ§Éú
+//                åˆ¤æ–­æ˜¯å¦æ˜¯å­¦ç”Ÿ
                 Student student = new Student(userName, password);
                 currentStudent = userDao.Login(con, student);
                 if (currentStudent == null) {
                     student.setPassword(password);
                     request.setAttribute("user", student);
-                    request.setAttribute("error", "ÓÃ»§Ãû»òÃÜÂë´íÎó£¡");
+                    request.setAttribute("error", "ç”¨æˆ·åæˆ–å¯†ç é”™è¯¯ï¼");
                     request.setAttribute("userType", userType);
-                    System.out.println("[info]----Ñ§ÉúµÇÂ¼Ê§°Ü");
+                    System.out.println("[info]----å­¦ç”Ÿç™»å½•å¤±è´¥");
                     request.getRequestDispatcher(PageConstrant.LOGIN_PAGE).forward(request, response);
                 } else {
                     rememberMe(remember, userName, password, userType, request, response);
                     session.setAttribute(LoginConstrant.CURRENT_USER_TYPE, UserType.STUDENT);
                     session.setAttribute(LoginConstrant.CURRENT_USER, currentStudent);
                     request.setAttribute(PageConstrant.MAIN_PAGE, PageConstrant.STUDENT_BLANK_PAGE);
-                    System.out.println("[info]----Ñ§ÉúµÇÂ¼³É¹¦");
+                    System.out.println("[info]----å­¦ç”Ÿç™»å½•æˆåŠŸ");
                     request.getRequestDispatcher(PageConstrant.STUDENT_MAIN_PAGE).forward(request, response);
                 }
             }
@@ -142,7 +142,7 @@ public class LoginServlet extends HttpServlet {
             e.printStackTrace();
         } finally {
             try {
-                // ÊÍ·ÅÊı¾İ¿âÁ¬½Ó
+                // é‡Šæ”¾æ•°æ®åº“è¿æ¥
                 dbUtil.closeCon(con);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -151,10 +151,10 @@ public class LoginServlet extends HttpServlet {
     }
 
     /*
-     * ×Ô¶¨Òå·½·¨£º
-     *          ´¦Àí"¼Ç×¡ÎÒ"Õâ¸ö¹¦ÄÜ£¬Èç¹ûÓÃ»§Ñ¡ÔñÁË"¼Ç×¡ÎÒ"£¬Ôò±£´æ7µÄCookie
-     *          ·ñÔòÉ¾³ı¿Í»§¶ËÖĞÓë±¾ÏµÍ³Ïà¹ØµÄCookie
-     * dorumUser: ÕËºÅÃû-ÃÜÂë-½ÇÉ«ÀàĞÍ-yes
+     * è‡ªå®šä¹‰æ–¹æ³•ï¼š
+     *          å¤„ç†"è®°ä½æˆ‘"è¿™ä¸ªåŠŸèƒ½ï¼Œå¦‚æœç”¨æˆ·é€‰æ‹©äº†"è®°ä½æˆ‘"ï¼Œåˆ™ä¿å­˜7çš„Cookie
+     *          å¦åˆ™åˆ é™¤å®¢æˆ·ç«¯ä¸­ä¸æœ¬ç³»ç»Ÿç›¸å…³çš„Cookie
+     * dorumUser: è´¦å·å-å¯†ç -è§’è‰²ç±»å‹-yes
      * */
     private void rememberMe(String remember,
                             String userName,
@@ -163,19 +163,19 @@ public class LoginServlet extends HttpServlet {
                             HttpServletRequest request,
                             HttpServletResponse response) {
         if (LoginConstrant.REMEMBER_ME.equals(remember)) {
-            // ¼Ç×¡ÎÒ
+            // è®°ä½æˆ‘
             Cookie user = new Cookie(LoginConstrant.COOKIE_KEY, userName + "-" + password + "-" + userType + "-" + "yes");
-            /*ÉèÖÃCookieµÄ´æ»îÊ±¼äÎª7Ìì  */
+            /*è®¾ç½®Cookieçš„å­˜æ´»æ—¶é—´ä¸º7å¤©  */
             user.setMaxAge(LoginConstrant.COOKIE_TIME_OUT);
             response.addCookie(user);
         } else {
-            // É¾³ı¿Í»§¶ËCookie
+            // åˆ é™¤å®¢æˆ·ç«¯Cookie
             deleteCookie(userName, request, response);
         }
     }
 
     /*
-     * ×Ô¶¨Òå·½·¨£ºÉ¾³ı¿Í»§¶ËCookie
+     * è‡ªå®šä¹‰æ–¹æ³•ï¼šåˆ é™¤å®¢æˆ·ç«¯Cookie
      * */
     private void deleteCookie(String userName, HttpServletRequest request, HttpServletResponse response) {
         Cookie[] cookies = request.getCookies();

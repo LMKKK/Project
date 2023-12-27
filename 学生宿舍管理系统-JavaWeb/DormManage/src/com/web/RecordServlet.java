@@ -55,7 +55,7 @@ public class RecordServlet extends HttpServlet {
         String dormBuildId = request.getParameter(BUILD_TO_SELECT);
         String searchType = request.getParameter(SEARCH_TYPE);
         String action = request.getParameter(ACTION);
-        // TODO °´ÕÕÈÕÆÚÇø¼ä ¼ìË÷
+        // TODO æŒ‰ç…§æ—¥æœŸåŒºé—´ æ£€ç´¢
         String startDate = request.getParameter(RECORD_START_DATE);
         String endDate = request.getParameter(RECORD_END_DATE);
 
@@ -100,14 +100,14 @@ public class RecordServlet extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if (UserType.ADMIN.equals(currentUserType)) {
-                // µ±Ç°ÓÃ»§ÊÇÏµÍ³¹ÜÀíÔ±
+                // å½“å‰ç”¨æˆ·æ˜¯ç³»ç»Ÿç®¡ç†å‘˜
                 List<Record> recordList = recordDao.recordList(con, record);
                 request.setAttribute(PageMeta.DORM_BUILD_LIST, recordDao.dormBuildList(con));
                 request.setAttribute(PageMeta.RECORD_LIST, recordList);
                 request.setAttribute(PageConstrant.MAIN_PAGE, "admin/record.jsp");
                 request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
             } else if (UserType.DORM_MANAGER.equals(currentUserType)) {
-                // µ±Ç°ÓÃ»§ÊÇËŞÉá¹ÜÀíÔ±
+                // å½“å‰ç”¨æˆ·æ˜¯å®¿èˆç®¡ç†å‘˜
                 DormManager manager = (DormManager) (session.getAttribute("currentUser"));
                 int buildId = manager.getDormBuildId();
                 String buildName = DormBuildDao.dormBuildName(con, buildId);
@@ -117,7 +117,7 @@ public class RecordServlet extends HttpServlet {
                 request.setAttribute(PageConstrant.MAIN_PAGE, "dormManager/record.jsp");
                 request.getRequestDispatcher(PageConstrant.MANAGER_MAIN_PAGE).forward(request, response);
             } else if (UserType.STUDENT.equals(currentUserType)) {
-                // µ±Ç°ÓÃ»§ÊÇÑ§Éú
+                // å½“å‰ç”¨æˆ·æ˜¯å­¦ç”Ÿ
                 Student student = (Student) (session.getAttribute("currentUser"));
                 List<Record> recordList = recordDao.recordListWithNumber(con, record, student.getStuNumber());
                 request.setAttribute(PageMeta.RECORD_LIST, recordList);

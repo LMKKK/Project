@@ -64,11 +64,11 @@ public class DormBuildServlet extends HttpServlet {
             dormBuildDelete(request, response);
             return;
         } else if (OptConstrant.ASSIGN_Manager.equals(action)) {
-            // Ìø×ªµ½·ÖÅäËŞÉá¹ÜÀíÔ±
+            // è·³è½¬åˆ°åˆ†é…å®¿èˆç®¡ç†å‘˜
             dormBuildManager(request, response);
             return;
         } else if ("addManager".equals(action)) {
-            // Ìí¼ÓËŞÉá¹ÜÀíÔ±
+            // æ·»åŠ å®¿èˆç®¡ç†å‘˜
             dormBuildAddManager(request, response);
         } else if (OptConstrant.MOVE_Manager.equals(action)) {
             managerMove(request, response);
@@ -81,8 +81,8 @@ public class DormBuildServlet extends HttpServlet {
             }
             request.setAttribute(DORM_BUILD_SEARCH_NAME, searchBuildName);
         } else {
-            // ·ÀÖ¹action²ÎÊıÎª¿ÕÊ±£¬ÏµÍ³±ÀÀ£°×Ò³
-            // ²¹³ä²ÎÊı
+            // é˜²æ­¢actionå‚æ•°ä¸ºç©ºæ—¶ï¼Œç³»ç»Ÿå´©æºƒç™½é¡µ
+            // è¡¥å……å‚æ•°
             if (StringUtil.isNotEmpty(searchBuildName)) {
                 dormBuild.setDormBuildName(searchBuildName);
                 session.setAttribute(DORM_BUILD_SEARCH_NAME, searchBuildName);
@@ -96,7 +96,7 @@ public class DormBuildServlet extends HttpServlet {
             }
         }
 
-        // Ë¢ĞÂÒ³Ãæ
+        // åˆ·æ–°é¡µé¢
         flushPage(dormBuild, request, response);
     }
 
@@ -151,15 +151,15 @@ public class DormBuildServlet extends HttpServlet {
     private void dormBuildManager(HttpServletRequest request,
                                   HttpServletResponse response) {
         String dormBuildId = request.getParameter("dormBuildId");
-        // £¡£¡£¡×¢Òâ£ºÒ»¶°ËŞÉáÂ¥¿ÉÒÔÓĞ¶à¸öËŞÉá¹ÜÀíÔ±£¬µ«ÊÇÒ»¸öËŞÉá¹ÜÀíÔ±Ö»ÄÜ ¹ÜÀíÒ»¸öËŞÉáÂ¥
-        // 1. »ñÈ¡Õâ¶°Â¥ÖĞµÄËŞÉá¹ÜÀíÔ±
-        // 2. ²éÕÒÎ´·ÖÅäµÄËŞÉá¹ÜÀíÔ±
+        // ï¼ï¼ï¼æ³¨æ„ï¼šä¸€æ ‹å®¿èˆæ¥¼å¯ä»¥æœ‰å¤šä¸ªå®¿èˆç®¡ç†å‘˜ï¼Œä½†æ˜¯ä¸€ä¸ªå®¿èˆç®¡ç†å‘˜åªèƒ½ ç®¡ç†ä¸€ä¸ªå®¿èˆæ¥¼
+        // 1. è·å–è¿™æ ‹æ¥¼ä¸­çš„å®¿èˆç®¡ç†å‘˜
+        // 2. æŸ¥æ‰¾æœªåˆ†é…çš„å®¿èˆç®¡ç†å‘˜
         Connection con = null;
         try {
             con = dbUtil.getCon();
-            // managerListWithBuild Õâ¶°Â¥ÖĞµÄËùÓĞËŞÉá¹ÜÀíÔ±
+            // managerListWithBuild è¿™æ ‹æ¥¼ä¸­çš„æ‰€æœ‰å®¿èˆç®¡ç†å‘˜
             List<DormManager> managerListWithBuild = dormBuildDao.dormManWithBuildId(con, dormBuildId);
-            // managerListToSelect Î´·ÖÅäµÄËŞÉá¹ÜÀíÔ±
+            // managerListToSelect æœªåˆ†é…çš„å®¿èˆç®¡ç†å‘˜
             List<DormManager> managerListToSelect = dormBuildDao.dormManWithoutBuild(con);
             request.setAttribute("dormBuildId", dormBuildId);
             request.setAttribute(PageMeta.DORM_MANAGER_WITH_BUILD, managerListWithBuild);
@@ -178,7 +178,7 @@ public class DormBuildServlet extends HttpServlet {
         try {
             con = dbUtil.getCon();
             if (dormBuildDao.existManOrDormWithId(con, dormBuildId)) {
-                request.setAttribute("error", "ËŞÉáÂ¥ÏÂÓĞËŞÉá»òËŞ¹Ü£¬²»ÄÜÉ¾³ı¸ÃËŞÉáÂ¥");
+                request.setAttribute("error", "å®¿èˆæ¥¼ä¸‹æœ‰å®¿èˆæˆ–å®¿ç®¡ï¼Œä¸èƒ½åˆ é™¤è¯¥å®¿èˆæ¥¼");
             } else {
                 dormBuildDao.dormBuildDelete(con, dormBuildId);
             }
@@ -211,38 +211,38 @@ public class DormBuildServlet extends HttpServlet {
             boolean flag = true;
             int saveNum = 0;
             if (StringUtil.isNotEmpty(dormBuildId)) {
-                // dormBuildId²»Îª¿Õ£¬ÊÇĞŞ¸Ä
+                // dormBuildIdä¸ä¸ºç©ºï¼Œæ˜¯ä¿®æ”¹
                 saveNum = dormBuildDao.dormBuildUpdate(con, dormBuild);
                 if (saveNum <= 0) {
-                    errMsg = "ĞŞ¸ÄÊ§°Ü";
+                    errMsg = "ä¿®æ”¹å¤±è´¥";
                     flag = false;
                 }
             } else {
-                // dormBuildIdÎª¿Õ£¬ÊÇĞÂÔö
+                // dormBuildIdä¸ºç©ºï¼Œæ˜¯æ–°å¢
 
                 if (StringUtil.isEmpty(dormBuildName)) {
-                    errMsg = "ËŞÉáÂ¥Ãû³Æ²»ÄÜÎª¿Õ";
+                    errMsg = "å®¿èˆæ¥¼åç§°ä¸èƒ½ä¸ºç©º";
                     flag = false;
                 }
 
-                // ĞèÒª¿¼ÂÇÕâ¸ö ¹«Ô¢Ãû³ÆÊÇ·ñÒÑ¾­ÓĞÁË
+                // éœ€è¦è€ƒè™‘è¿™ä¸ª å…¬å¯“åç§°æ˜¯å¦å·²ç»æœ‰äº†
                 if (flag && dormBuildDao.isExistBuildWithName(con, dormBuildName)) {
-                    // ÒÑ´æÔÚÍ¬ÃûµÄËŞÉáÂ¥
-                    errMsg = "ÒÑ´æÔÚÍ¬ÃûµÄËŞÉáÂ¥, Çë»»¸öÃû³Æ°É£¡";
+                    // å·²å­˜åœ¨åŒåçš„å®¿èˆæ¥¼
+                    errMsg = "å·²å­˜åœ¨åŒåçš„å®¿èˆæ¥¼, è¯·æ¢ä¸ªåç§°å§ï¼";
                     flag = false;
                 }
                 if (flag && StringUtil.isEmpty(errMsg)) {
-                    // ¼ìÑéÍê³É£¬¿ÉÒÔĞÂÔöÁË
+                    // æ£€éªŒå®Œæˆï¼Œå¯ä»¥æ–°å¢äº†
                     saveNum = dormBuildDao.dormBuildAdd(con, dormBuild);
                     if (saveNum <= 0) {
-                        errMsg = "±£´æÊ§°Ü";
+                        errMsg = "ä¿å­˜å¤±è´¥";
                         flag = false;
                     }
                 }
             }
 
             if (flag && StringUtil.isEmpty(errMsg)) {
-                // ²Ù×÷³É¹¦£¬Ìø»Øµ½ÁĞ±íÒ³
+                // æ“ä½œæˆåŠŸï¼Œè·³å›åˆ°åˆ—è¡¨é¡µ
                 request.getRequestDispatcher("dormBuild?action=list").forward(request, response);
                 return;
             } else {
@@ -267,7 +267,7 @@ public class DormBuildServlet extends HttpServlet {
                                   HttpServletResponse response) throws ServletException, IOException {
         String dormBuildId = request.getParameter("dormBuildId");
         if (StringUtil.isNotEmpty(dormBuildId)) {
-            // ²»Îª¿Õ£¬ÔòÊÇĞŞ¸Ä£¬ĞèÒªÌî³äÊı¾İ
+            // ä¸ä¸ºç©ºï¼Œåˆ™æ˜¯ä¿®æ”¹ï¼Œéœ€è¦å¡«å……æ•°æ®
             Connection con = null;
             try {
                 con = dbUtil.getCon();

@@ -54,9 +54,9 @@ public class DormManagerServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setCharacterEncoding("utf-8");
         HttpSession session = request.getSession();
-        String searchKey = request.getParameter(SEARCH_KEY); // ËÑË÷¹Ø¼ü×Ö
-        String searchType = request.getParameter(SEARCH_TYPE); // ËÑË÷ÀàĞÍ
-        String action = request.getParameter(ACTION_TYPE); // ²Ù×÷ÀàĞÍ
+        String searchKey = request.getParameter(SEARCH_KEY); // æœç´¢å…³é”®å­—
+        String searchType = request.getParameter(SEARCH_TYPE); // æœç´¢ç±»å‹
+        String action = request.getParameter(ACTION_TYPE); // æ“ä½œç±»å‹
         DormManager dormManager = new DormManager();
         if (OptConstrant.PRE_SAVE.equals(action)) {
             dormManagerPreSave(request, response);
@@ -86,7 +86,7 @@ public class DormManagerServlet extends HttpServlet {
             request.setAttribute(SEARCH_KEY, searchKey);
             request.setAttribute(SEARCH_TYPE, searchType);
         } else {
-            // actionÎª¿ÕÊ±£¬ ·ÀÖ¹ÏµÍ³±ÀÀ£°×Ò³£¬ ¶µµ×·½°¸
+            // actionä¸ºç©ºæ—¶ï¼Œ é˜²æ­¢ç³»ç»Ÿå´©æºƒç™½é¡µï¼Œ å…œåº•æ–¹æ¡ˆ
             if (StringUtil.isEmpty(searchKey)) {
                 searchKey = (String) session.getAttribute(SEARCH_KEY);
             }
@@ -108,7 +108,7 @@ public class DormManagerServlet extends HttpServlet {
                 session.setAttribute(SEARCH_KEY, searchKey);
             }
         }
-        // Ë¢ĞÂÒ³Ãæ
+        // åˆ·æ–°é¡µé¢
         flushPage(dormManager, request, response);
     }
 
@@ -164,10 +164,10 @@ public class DormManagerServlet extends HttpServlet {
             dormManager.setDormManagerId(Integer.parseInt(dormManagerId));
         }
 
-        String errMsg = null; // Ò³ÃæµÄ´íÎóĞÅÏ¢
-        boolean flag = true; // ±êÖ¾´íÎóĞÅÏ¢
+        String errMsg = null; // é¡µé¢çš„é”™è¯¯ä¿¡æ¯
+        boolean flag = true; // æ ‡å¿—é”™è¯¯ä¿¡æ¯
         if (flag && (StringUtil.isEmpty(userName) || StringUtil.isEmpty(name))) {
-            errMsg = "ÓÃ»§Ãû»òĞÕÃû²»¿ÉÒÔÎª¿Õ";
+            errMsg = "ç”¨æˆ·åæˆ–å§“åä¸å¯ä»¥ä¸ºç©º";
             flag = false;
         }
 
@@ -177,33 +177,33 @@ public class DormManagerServlet extends HttpServlet {
             con = dbUtil.getCon();
             int saveNum = 0;
             if (flag && StringUtil.isNotEmpty(dormManagerId)) {
-                // dormMangerId²»Îª¿Õ£¬ÔòÊÇĞŞ¸ÄĞÅÏ¢
+                // dormMangerIdä¸ä¸ºç©ºï¼Œåˆ™æ˜¯ä¿®æ”¹ä¿¡æ¯
                 saveNum = dormManagerDao.dormManagerUpdate(con, dormManager);
             } else {
-                // dormMangerIDÎª¿Õ,ÔòÊÇĞÂÔö
-                // ¼ì²éÓÃ»§ÃûÊÇ·ñÒÑ´æÔÚ
+                // dormMangerIDä¸ºç©º,åˆ™æ˜¯æ–°å¢
+                // æ£€æŸ¥ç”¨æˆ·åæ˜¯å¦å·²å­˜åœ¨
                 if (flag && dormManagerDao.haveManagerByUser(con, dormManager.getUserName())) {
-                    errMsg = "ÓÃ»§Ãû²»¿ÉÖØ¸´£¬ÇëÖØĞÂÊäÈë";
+                    errMsg = "ç”¨æˆ·åä¸å¯é‡å¤ï¼Œè¯·é‡æ–°è¾“å…¥";
                     flag = false;
                 }
 
                 if (flag && StringUtil.isEmpty(errMsg)) {
                     saveNum = dormManagerDao.dormManagerAdd(con, dormManager);
                     if (saveNum <= 0) {
-                        errMsg = "±£´æÊ§°Ü£¡ÇëÖØĞÂ¼ì²éÂ¼ÈëµÄĞÅÏ¢";
+                        errMsg = "ä¿å­˜å¤±è´¥ï¼è¯·é‡æ–°æ£€æŸ¥å½•å…¥çš„ä¿¡æ¯";
                         flag = false;
                     }
                 }
             }
 
             if (!flag || StringUtil.isNotEmpty(errMsg) || saveNum <= 0) {
-                // ·¢ÉúÁË´íÎó£¬ÖØĞÂÌîĞ´
+                // å‘ç”Ÿäº†é”™è¯¯ï¼Œé‡æ–°å¡«å†™
                 request.setAttribute(PageMeta.DORM_MANAGER, dormManager);
                 request.setAttribute("error", errMsg);
                 request.setAttribute(PageConstrant.MAIN_PAGE, "admin/dormManagerSave.jsp");
                 request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
             } else {
-                // ĞÂÔö³É¹¦£¬Ìø×ªµ½ÁĞ±íÒ³
+                // æ–°å¢æˆåŠŸï¼Œè·³è½¬åˆ°åˆ—è¡¨é¡µ
                 request.getRequestDispatcher("dormManager?action=list").forward(request, response);
             }
 
@@ -222,8 +222,8 @@ public class DormManagerServlet extends HttpServlet {
                                     HttpServletResponse response) throws ServletException, IOException {
         String dormManagerId = request.getParameter("dormManagerId");
         if (StringUtil.isNotEmpty(dormManagerId)) {
-            // dormMangeId ²»Îª¿Õ£¬ÔòÊÇĞŞ¸Ä
-            // ĞèÒªÌî³äĞÅÏ¢
+            // dormMangeId ä¸ä¸ºç©ºï¼Œåˆ™æ˜¯ä¿®æ”¹
+            // éœ€è¦å¡«å……ä¿¡æ¯
             Connection con = null;
             try {
                 con = dbUtil.getCon();

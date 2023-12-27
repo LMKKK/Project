@@ -208,9 +208,9 @@ public class ExceptionServlet extends HttpServlet {
         String detail = request.getParameter("detail");
 
         if ("1".equals(state)) {
-            state = "´¦ÀíÖĞ";
+            state = "å¤„ç†ä¸­";
         } else {
-            state = "ÒÑÍê³É";
+            state = "å·²å®Œæˆ";
         }
         Excp excp = new Excp();
         excp.setExcpId(Integer.parseInt(excpId));
@@ -222,9 +222,9 @@ public class ExceptionServlet extends HttpServlet {
 
             int lines = recordDao.recordUpdate(con, excp);
             if (lines != 0) {
-                System.out.println("ĞŞ¸Ä³É¹¦");
+                System.out.println("ä¿®æ”¹æˆåŠŸ");
             } else {
-                System.out.println("ĞŞ¸ÄÊ§°Ü");
+                System.out.println("ä¿®æ”¹å¤±è´¥");
             }
             HttpSession session = request.getSession();
             DormManager manager = (DormManager) (session.getAttribute("currentUser"));
@@ -241,7 +241,7 @@ public class ExceptionServlet extends HttpServlet {
 
     }
 
-    // ½«Í¼Æ¬ÉÏ´«µ½×ÔÉíµÄÕâ¸ö·şÎñÆ÷
+    // å°†å›¾ç‰‡ä¸Šä¼ åˆ°è‡ªèº«çš„è¿™ä¸ªæœåŠ¡å™¨
     private void upload(HttpServletRequest request, HttpServletResponse response) {
 
         try {
@@ -253,30 +253,30 @@ public class ExceptionServlet extends HttpServlet {
             String detail = null;
             String imgUrl = null;
             String filename = null;
-            //ÉèÖÃContentType×Ö¶ÎÖµ
+            //è®¾ç½®ContentTypeå­—æ®µå€¼
             response.setContentType("text/html;charset=utf-8");
-            // ´´½¨DiskFileItemFactory¹¤³§¶ÔÏó
+            // åˆ›å»ºDiskFileItemFactoryå·¥å‚å¯¹è±¡
             DiskFileItemFactory factory = new DiskFileItemFactory();
-            //ÉèÖÃÎÄ¼ş»º´æÄ¿Â¼£¬Èç¹û¸ÃÄ¿Â¼²»´æÔÚÔòĞÂ´´½¨Ò»¸ö
+            //è®¾ç½®æ–‡ä»¶ç¼“å­˜ç›®å½•ï¼Œå¦‚æœè¯¥ç›®å½•ä¸å­˜åœ¨åˆ™æ–°åˆ›å»ºä¸€ä¸ª
             File f = new File("C:\\Test");
             if (!f.exists()) {
                 f.mkdirs();
             }
-            // ÉèÖÃÎÄ¼şµÄ»º´æÂ·¾¶
+            // è®¾ç½®æ–‡ä»¶çš„ç¼“å­˜è·¯å¾„
             factory.setRepository(f);
-            // ´´½¨ ServletFileUpload¶ÔÏó
+            // åˆ›å»º ServletFileUploadå¯¹è±¡
             ServletFileUpload fileupload = new ServletFileUpload(factory);
-            //ÉèÖÃ×Ö·û±àÂë
+            //è®¾ç½®å­—ç¬¦ç¼–ç 
             fileupload.setHeaderEncoding("utf-8");
-            // ½âÎö request£¬µÃµ½ÉÏ´«ÎÄ¼şµÄFileItem¶ÔÏó
+            // è§£æ requestï¼Œå¾—åˆ°ä¸Šä¼ æ–‡ä»¶çš„FileItemå¯¹è±¡
             List<FileItem> fileitems = fileupload.parseRequest(request);
-            //»ñÈ¡×Ö·ûÁ÷
+            //è·å–å­—ç¬¦æµ
             PrintWriter writer = response.getWriter();
-            // ±éÀú¼¯ºÏ
+            // éå†é›†åˆ
             for (FileItem fileitem : fileitems) {
-                // ÅĞ¶ÏÊÇ·ñÎªÆÕÍ¨×Ö¶Î
+                // åˆ¤æ–­æ˜¯å¦ä¸ºæ™®é€šå­—æ®µ
                 if (fileitem.isFormField()) {
-                    //ÊÇÆÕÍ¨×Ö¶Î,»ñÈ¡×Ö¶ÎÃû
+                    //æ˜¯æ™®é€šå­—æ®µ,è·å–å­—æ®µå
                     String tmp_name = fileitem.getFieldName();
                     if ("stuNum".equals(tmp_name)) {
                         stuNum = fileitem.getString("utf-8");
@@ -295,52 +295,52 @@ public class ExceptionServlet extends HttpServlet {
                         excp.setDate(date);
                     }
                 } else {
-                    // »ñÈ¡ÉÏ´«µÄÎÄ¼şÃû
+                    // è·å–ä¸Šä¼ çš„æ–‡ä»¶å
                     filename = fileitem.getName();
-                    //´¦ÀíÉÏ´«ÎÄ¼ş
+                    //å¤„ç†ä¸Šä¼ æ–‡ä»¶
                     if (StringUtil.isNotEmpty(filename)) {
-//                        writer.print("ÉÏ´«µÄÎÄ¼şÃû³ÆÊÇ£º" + filename + "<br>");
-                        // ½ØÈ¡³öÎÄ¼şÃû
+//                        writer.print("ä¸Šä¼ çš„æ–‡ä»¶åç§°æ˜¯ï¼š" + filename + "<br>");
+                        // æˆªå–å‡ºæ–‡ä»¶å
                         filename = filename.substring(filename.lastIndexOf("\\") + 1);
-                        // ÎÄ¼şÃûĞèÒªÎ¨Ò»
+                        // æ–‡ä»¶åéœ€è¦å”¯ä¸€
                         filename = UUID.randomUUID().toString() + "_" + filename;
                         imgUrl = filename;
                         excp.setImgUrl(imgUrl);
-                        // ÔÚ·şÎñÆ÷´´½¨Í¬ÃûÎÄ¼ş
+                        // åœ¨æœåŠ¡å™¨åˆ›å»ºåŒåæ–‡ä»¶
                         String webPath = "/resources/img/";
-                        //½«·şÎñÆ÷ÖĞÎÄ¼ş¼ĞÂ·¾¶ÓëÎÄ¼şÃû×éºÏ³ÉÍêÕûµÄ·şÎñÆ÷¶ËÂ·¾¶
+                        //å°†æœåŠ¡å™¨ä¸­æ–‡ä»¶å¤¹è·¯å¾„ä¸æ–‡ä»¶åç»„åˆæˆå®Œæ•´çš„æœåŠ¡å™¨ç«¯è·¯å¾„
                         String filepath = getServletContext().getRealPath(webPath + filename);
-                        // ´´½¨ÎÄ¼ş
+                        // åˆ›å»ºæ–‡ä»¶
                         File file = new File(filepath);
                         file.getParentFile().mkdirs();
                         file.createNewFile();
-                        // »ñµÃÉÏ´«ÎÄ¼şÁ÷
+                        // è·å¾—ä¸Šä¼ æ–‡ä»¶æµ
                         InputStream in = fileitem.getInputStream();
-                        // Ê¹ÓÃFileOutputStream´ò¿ª·şÎñÆ÷¶ËµÄÉÏ´«ÎÄ¼ş
+                        // ä½¿ç”¨FileOutputStreamæ‰“å¼€æœåŠ¡å™¨ç«¯çš„ä¸Šä¼ æ–‡ä»¶
                         FileOutputStream out = new FileOutputStream(file);
-                        // Á÷µÄ¶Ô¿½
-                        byte[] buffer = new byte[1024];//Ã¿´Î¶ÁÈ¡1¸ö×Ö½Ú
+                        // æµçš„å¯¹æ‹·
+                        byte[] buffer = new byte[1024];//æ¯æ¬¡è¯»å–1ä¸ªå­—èŠ‚
                         int len;
-                        //¿ªÊ¼¶ÁÈ¡ÉÏ´«ÎÄ¼şµÄ×Ö½Ú£¬²¢½«ÆäÊä³öµ½·şÎñ¶ËµÄÉÏ´«ÎÄ¼şÊä³öÁ÷ÖĞ
+                        //å¼€å§‹è¯»å–ä¸Šä¼ æ–‡ä»¶çš„å­—èŠ‚ï¼Œå¹¶å°†å…¶è¾“å‡ºåˆ°æœåŠ¡ç«¯çš„ä¸Šä¼ æ–‡ä»¶è¾“å‡ºæµä¸­
                         while ((len = in.read(buffer)) > 0) {
                             out.write(buffer, 0, len);
                         }
-                        System.out.println("ÎÄ¼şÂ·¾¶Ãû" + filepath);
-                        // ¹Ø±ÕÁ÷
+                        System.out.println("æ–‡ä»¶è·¯å¾„å" + filepath);
+                        // å…³é—­æµ
                         in.close();
                         out.close();
-                        // É¾³ıÁÙÊ±ÎÄ¼ş
+                        // åˆ é™¤ä¸´æ—¶æ–‡ä»¶
                         fileitem.delete();
-                        System.out.println("ÉÏ´«ÎÄ¼ş³É¹¦");
+                        System.out.println("ä¸Šä¼ æ–‡ä»¶æˆåŠŸ");
                     }
                 }
             }
             Connection con = dbUtil.getCon();
             excp.setDormBuildName(DormBuildDao.dormBuildName(con, excp.getDormBuildId()));
-            // ½«Êı¾İ²åÈëµ½Êı¾İ¿âÖĞ
+            // å°†æ•°æ®æ’å…¥åˆ°æ•°æ®åº“ä¸­
             int s = recordDao.recordAdd(con, excp);
             if (s != 0) {
-                System.out.println("Ìí¼Ó³É¹¦");
+                System.out.println("æ·»åŠ æˆåŠŸ");
             }
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -37,13 +37,13 @@ public class StudentServlet extends HttpServlet {
         this.doPost(request, response);
     }
 
-    // Ñ¡ÔñµÄËŞÉáÂ¥
+    // é€‰æ‹©çš„å®¿èˆæ¥¼
     public static final String BUILD_SELECT = "buildToSelect";
 
-    // ËÑË÷¹Ø¼ü×Ö
+    // æœç´¢å…³é”®å­—
     public static final String SEARCH_KEY = "s_studentText";
 
-    // ËÑË÷ÀàĞÍ
+    // æœç´¢ç±»å‹
     public static final String SEARCH_TYPE = "searchType";
 
 
@@ -65,8 +65,8 @@ public class StudentServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.setCharacterEncoding("utf-8"); // ·ÀÖ¹»ñÈ¡ÇëÇó²ÎÊıÊ±ÂÒÂë
-        String action = request.getParameter(ACTION_TYPE); // ÓÃ»§²Ù×÷ÀàĞÍ
+        request.setCharacterEncoding("utf-8"); // é˜²æ­¢è·å–è¯·æ±‚å‚æ•°æ—¶ä¹±ç 
+        String action = request.getParameter(ACTION_TYPE); // ç”¨æˆ·æ“ä½œç±»å‹
 
         HttpSession session = request.getSession();
         String currentUserType = (String) session.getAttribute(LoginConstrant.CURRENT_USER_TYPE);
@@ -75,7 +75,7 @@ public class StudentServlet extends HttpServlet {
         String dormBuildId = request.getParameter(BUILD_SELECT);
         String searchType = request.getParameter(SEARCH_TYPE);
 
-        Student student = new Student(); // ¹¹½¨ËÑË÷Ìõ¼şµÄÊµÌå
+        Student student = new Student(); // æ„å»ºæœç´¢æ¡ä»¶çš„å®ä½“
         if (OptConstrant.PRE_SAVE.equals(action)) {
             studentPreSave(request, response);
             return;
@@ -91,17 +91,17 @@ public class StudentServlet extends HttpServlet {
                 e.printStackTrace();
             }
         } else if (OptConstrant.LIST.equals(action)) {
-            // ¹¹½¨ËÑË÷Ìõ¼ş
+            // æ„å»ºæœç´¢æ¡ä»¶
             if (StringUtil.isNotEmpty(searchKey)) {
                 switch (searchType) {
                     case SEARCH_TYPE_NAME:
-                        student.setName(searchKey); // Ñ§ÉúĞÕÃûËÑË÷µÄÄÚÈİ
+                        student.setName(searchKey); // å­¦ç”Ÿå§“åæœç´¢çš„å†…å®¹
                         break;
                     case SEARCH_TYPE_NUMBER:
-                        student.setStuNumber(searchKey); // Ñ§ÉúÑ§ºÅËÑË÷µÄÄÚÈİ
+                        student.setStuNumber(searchKey); // å­¦ç”Ÿå­¦å·æœç´¢çš„å†…å®¹
                         break;
                     case SEARCH_TYPE_DORM:
-                        student.setDormName(searchKey); // ËŞÉáÃû³ÆËÑË÷µÄÄÚÈİ
+                        student.setDormName(searchKey); // å®¿èˆåç§°æœç´¢çš„å†…å®¹
                         break;
                 }
                 session.setAttribute(SEARCH_KEY, searchKey);
@@ -123,7 +123,7 @@ public class StudentServlet extends HttpServlet {
             request.setAttribute(SEARCH_TYPE, searchType);
             request.setAttribute(BUILD_SELECT, dormBuildId);
         } else {
-            // µ±actionÎª¿ÕÊ±µÄ ¶µµ×·½°¸£¬ ·ÀÖ¹ÏµÍ³°×Ò³±ÀÀ£
+            // å½“actionä¸ºç©ºæ—¶çš„ å…œåº•æ–¹æ¡ˆï¼Œ é˜²æ­¢ç³»ç»Ÿç™½é¡µå´©æºƒ
             if (StringUtil.isEmpty(searchKey)) {
                 String historySearchKey = (String) session.getAttribute(SEARCH_KEY);
                 if (StringUtil.isNotEmpty(historySearchKey)) {
@@ -141,13 +141,13 @@ public class StudentServlet extends HttpServlet {
             if (StringUtil.isNotEmpty(searchKey)) {
                 switch (searchType) {
                     case SEARCH_TYPE_NAME:
-                        student.setName(searchKey); // Ñ§ÉúĞÕÃûËÑË÷µÄÄÚÈİ
+                        student.setName(searchKey); // å­¦ç”Ÿå§“åæœç´¢çš„å†…å®¹
                         break;
                     case SEARCH_TYPE_NUMBER:
-                        student.setStuNumber(searchKey); // Ñ§ÉúÑ§ºÅËÑË÷µÄÄÚÈİ
+                        student.setStuNumber(searchKey); // å­¦ç”Ÿå­¦å·æœç´¢çš„å†…å®¹
                         break;
                     case SEARCH_TYPE_DORM:
-                        student.setDormName(searchKey); // ËŞÉáÃû³ÆËÑË÷µÄÄÚÈİ
+                        student.setDormName(searchKey); // å®¿èˆåç§°æœç´¢çš„å†…å®¹
                         break;
                 }
                 session.setAttribute(SEARCH_KEY, searchKey);
@@ -161,14 +161,14 @@ public class StudentServlet extends HttpServlet {
 
         }
 
-        // Ç°ÃæµÄÂß¼­Ö»ÊÇÎª Ë¢ĞÂÒ³Ãæ×öÆÌµæ
+        // å‰é¢çš„é€»è¾‘åªæ˜¯ä¸º åˆ·æ–°é¡µé¢åšé“ºå«
 
         flushPage(student, request, response);
 
     }
 
     /**
-     * Ë¢ĞÂÒ³Ãæ
+     * åˆ·æ–°é¡µé¢
      * @param request
      * @param response
      */
@@ -189,7 +189,7 @@ public class StudentServlet extends HttpServlet {
                 int buildId = manager.getDormBuildId();
                 String buildName = DormBuildDao.dormBuildName(con, buildId);
                 List<Student> studentList = studentDao.studentListWithBuild(con, student, buildId);
-                // ËŞ¹ÜÈËÔ±Ö»ÄÜ²é¿´×Ô¼ºËù¹ÜÏ½µÄËŞÉáÂ¥µÄÑ§Éú
+                // å®¿ç®¡äººå‘˜åªèƒ½æŸ¥çœ‹è‡ªå·±æ‰€ç®¡è¾–çš„å®¿èˆæ¥¼çš„å­¦ç”Ÿ
                 request.setAttribute(PageMeta.DORM_BUILD_NAME, buildName);
                 request.setAttribute(PageMeta.STUDENT_LIST, studentList);
                 request.setAttribute(PageConstrant.MAIN_PAGE, STUDENT_PAGE_MANAGER);
@@ -227,38 +227,38 @@ public class StudentServlet extends HttpServlet {
             int saveNum = 0;
             String errMsg = null;
             if (StringUtil.isNotEmpty(studentId)) {
-                // id²»Îª¿Õ£¬ÔòÊÇĞŞ¸ÄÑ§Éú
+                // idä¸ä¸ºç©ºï¼Œåˆ™æ˜¯ä¿®æ”¹å­¦ç”Ÿ
                 saveNum = studentDao.studentUpdate(con, student);
             } else {
-                // idÎª¿Õ£¬ÔòÊÇĞÂÔöÑ§Éú
+                // idä¸ºç©ºï¼Œåˆ™æ˜¯æ–°å¢å­¦ç”Ÿ
 
-                // ¼ìÑéÊÇ·ñÌîÁËÑ§ºÅ
+                // æ£€éªŒæ˜¯å¦å¡«äº†å­¦å·
                 if (StringUtil.isEmpty(student.getStuNumber())) {
-                    errMsg = "Ñ§ºÅ²»¿ÉÎª¿Õ£¡";
+                    errMsg = "å­¦å·ä¸å¯ä¸ºç©ºï¼";
                 }
 
-                // ÅĞ¶ÏÑ§ºÅÊÇ·ñÒÑ¾­±»Õ¼ÓÃ
+                // åˆ¤æ–­å­¦å·æ˜¯å¦å·²ç»è¢«å ç”¨
                 if (studentDao.haveNameByNumber(con, student.getStuNumber())) {
-                    errMsg = "¸ÃÑ§ºÅÒÑ´æÔÚ£¡";
+                    errMsg = "è¯¥å­¦å·å·²å­˜åœ¨ï¼";
                 }
 
                 if (StringUtil.isEmpty(errMsg)) {
-                    // Ğ£ÑéÍ¨¹ı£¬¿ÉÒÔĞÂÔöÁË
+                    // æ ¡éªŒé€šè¿‡ï¼Œå¯ä»¥æ–°å¢äº†
                     saveNum = studentDao.studentAdd(con, student);
                     if (saveNum <= 0) {
-                        errMsg = "±£´æÊ§°Ü£¡ÇëÖØĞÂ¼ì²éÂ¼ÈëµÄĞÅÏ¢??";
+                        errMsg = "ä¿å­˜å¤±è´¥ï¼è¯·é‡æ–°æ£€æŸ¥å½•å…¥çš„ä¿¡æ¯??";
                     }
                 }
             }
 
             if (StringUtil.isNotEmpty(errMsg) || saveNum <= 0) {
-                // ±£´æÊ§°Ü£¬»Øµ½ÌîĞ´Ò³£¬ÖØĞÂÌîĞ´
+                // ä¿å­˜å¤±è´¥ï¼Œå›åˆ°å¡«å†™é¡µï¼Œé‡æ–°å¡«å†™
                 request.setAttribute(PageMeta.STUDENT, student);
                 request.setAttribute(PageMeta.ERR_MSG, errMsg);
                 request.setAttribute(PageConstrant.MAIN_PAGE, STUDENT_PAGE_SAVE);
                 request.getRequestDispatcher(PageConstrant.ADMIN_MAIN_PAGE).forward(request, response);
             } else {
-                // ±£´æ³É¹¦£¬Ìø×ªµ½ÁĞ±íÒ³
+                // ä¿å­˜æˆåŠŸï¼Œè·³è½¬åˆ°åˆ—è¡¨é¡µ
                 request.getRequestDispatcher("student?action=list").forward(request, response);
             }
         } catch (Exception e) {
@@ -273,7 +273,7 @@ public class StudentServlet extends HttpServlet {
     }
 
     /**
-     * ÎªÌîĞ´Ò³²¹³äÊı¾İ£¬²¢Ìø×ªµ½Ñ§ÉúĞÅÏ¢ÌîĞ´Ò³
+     * ä¸ºå¡«å†™é¡µè¡¥å……æ•°æ®ï¼Œå¹¶è·³è½¬åˆ°å­¦ç”Ÿä¿¡æ¯å¡«å†™é¡µ
      * @param request
      * @param response
      * @throws ServletException
